@@ -1,0 +1,75 @@
+{
+  "projectType": "sdk-library",
+  "projectName": "Jarallax",
+  "projectDescription": "Smooth parallax scrolling effect for background images, videos and inline elements with support for YouTube, Vimeo and local videos.",
+  "theme": "palm",
+  "primaryColor": "#7c7c7c",
+  "lightColor": "#090909",
+  "darkColor": "#c8c8c8",
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Documentation",
+        "groups": [
+          {
+            "group": "Get Started",
+            "pages": [
+              "introduction",
+              "installation",
+              "quickstart"
+            ]
+          },
+          {
+            "group": "Guides",
+            "pages": [
+              "guides/basic-usage",
+              "guides/video-backgrounds",
+              "guides/advanced-options",
+              "guides/events-and-methods"
+            ]
+          },
+          {
+            "group": "Examples",
+            "pages": [
+              "examples/vanilla-javascript",
+              "examples/react-nextjs",
+              "examples/jquery"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "API Reference",
+        "groups": [
+          {
+            "group": "Reference",
+            "pages": [
+              "api/options",
+              "api/methods",
+              "api/events",
+              "api/video-extension"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "keyFeatures": [
+    "Parallax scrolling for images and videos",
+    "Support for YouTube, Vimeo, and self-hosted videos",
+    "Multiple parallax effect types (scroll, scale, opacity)",
+    "Zero dependencies, jQuery optional",
+    "TypeScript support with type definitions",
+    "Works with modern frameworks (React, Next.js, Vue)"
+  ],
+  "publicApiSurface": [
+    "jarallax(elements, options)",
+    "jarallaxVideo()",
+    "jarallax(elements, 'destroy')",
+    "jarallax(elements, 'isVisible')",
+    "jarallax(elements, 'onResize')",
+    "jarallax(elements, 'onScroll')",
+    "JarallaxOptions interface",
+    "JarallaxOnScrollCalculations interface"
+  ]
+}
