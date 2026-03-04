@@ -1,0 +1,234 @@
+---
+title: 'Options'
+description: 'Complete reference for all Jarallax configuration options'
+---
+
+Options can be passed as a configuration object when initializing Jarallax, or as data attributes (e.g., `data-speed`, `data-type`) in HTML.
+
+## Core Options
+
+<ParamField path="type" type="string" default="scroll">
+  The type of parallax effect to apply.
+  
+  Available values:
+  - `scroll` - Standard parallax scrolling effect
+  - `scale` - Scale effect as the element comes into view
+  - `opacity` - Fade effect based on scroll position
+  - `scroll-opacity` - Combined scroll and opacity effect
+  - `scale-opacity` - Combined scale and opacity effect
+
+  ```javascript
+  jarallax(document.querySelectorAll('.jarallax'), {
+    type: 'scale-opacity'
+  });
+  ```
+</ParamField>
+
+<ParamField path="speed" type="number" default="0.5">
+  Controls the speed and direction of the parallax effect. Accepts values from `-1.0` to `2.0`.
+  
+  - Negative values (`-1.0` to `0`) reverse the scroll direction
+  - `0.5` creates a natural parallax effect (half the scroll speed)
+  - `1.0` scrolls at the same speed as the page (no parallax)
+  - Values above `1.0` create a faster-than-scroll effect
+
+  ```javascript
+  jarallax(document.querySelectorAll('.jarallax'), {
+    speed: 0.2
+  });
+  ```
+</ParamField>
+
+<ParamField path="containerClass" type="string" default="jarallax-container">
+  CSS class attribute applied to the parallax container element.
+  
+  The container is the wrapper element created by Jarallax to hold the parallax image.
+
+  ```javascript
+  jarallax(document.querySelectorAll('.jarallax'), {
+    containerClass: 'my-custom-container'
+  });
+  ```
+</ParamField>
+
+<ParamField path="imgSrc" type="string" default="null">
+  URL of the image to use as the parallax background.
+  
+  By default, Jarallax uses the image from the element's CSS background-image property or a child `.jarallax-img` element.
+
+  ```javascript
+  jarallax(document.querySelectorAll('.jarallax'), {
+    imgSrc: '/images/parallax-bg.jpg'
+  });
+  ```
+</ParamField>
+
+<ParamField path="imgElement" type="string | Element" default=".jarallax-img">
+  DOM element or CSS selector for the image tag to use as background.
+  
+  Can be:
+  - A CSS selector string (e.g., `.jarallax-img`)
+  - A DOM element reference
+  - An `<img>` or `<picture>` tag
+
+  ```javascript
+  jarallax(document.querySelectorAll('.jarallax'), {
+    imgElement: '.my-bg-image'
+  });
+  ```
+</ParamField>
+
+<ParamField path="imgSize" type="string" default="cover">
+  Defines how the background image should be sized.
+  
+  - When using `<img>` tag: accepts CSS `object-fit` values (cover, contain, fill, none, scale-down)
+  - When using background image: accepts CSS `background-size` values (cover, contain, auto, or specific dimensions)
+
+  ```javascript
+  jarallax(document.querySelectorAll('.jarallax'), {
+    imgSize: 'contain'
+  });
+  ```
+</ParamField>
+
+<ParamField path="imgPosition" type="string" default="50% 50%">
+  Controls the positioning of the background image.
+  
+  - When using `<img>` tag: accepts CSS `object-position` values
+  - When using background image: accepts CSS `background-position` values
+  
+  Common values: `center center`, `top left`, `50% 50%`, or any valid position value.
+
+  ```javascript
+  jarallax(document.querySelectorAll('.jarallax'), {
+    imgPosition: 'center top'
+  });
+  ```
+</ParamField>
+
+<ParamField path="imgRepeat" type="'repeat' | 'no-repeat'" default="no-repeat">
+  Determines whether the background image should repeat.
+  
+  Only supports CSS `background-repeat` values. Works only with background images, not `<img>` tags.
+
+  ```javascript
+  jarallax(document.querySelectorAll('.jarallax'), {
+    imgRepeat: 'repeat'
+  });
+  ```
+</ParamField>
+
+<ParamField path="keepImg" type="boolean" default="false">
+  When `true`, keeps the original `<img>` tag in its default place after Jarallax initialization.
+  
+  By default, Jarallax moves the image element into the parallax container. This option clones the image instead, leaving the original in place.
+
+  ```javascript
+  jarallax(document.querySelectorAll('.jarallax'), {
+    keepImg: true
+  });
+  ```
+</ParamField>
+
+<ParamField path="elementInViewport" type="Element | JQuery<Element>" default="null">
+  Custom DOM or jQuery element used to check if the parallax block is in the viewport.
+  
+  Useful for parallax elements inside scrollable containers or custom scroll implementations.
+  
+  See [GitHub Issue #13](https://github.com/nk-o/jarallax/issues/13) for more details.
+
+  ```javascript
+  const scrollContainer = document.querySelector('.scroll-container');
+  jarallax(document.querySelectorAll('.jarallax'), {
+    elementInViewport: scrollContainer
+  });
+  ```
+</ParamField>
+
+<ParamField path="zIndex" type="number" default="-100">
+  The z-index value applied to the parallax container.
+  
+  By default, the parallax background is placed behind the content with a negative z-index.
+
+  ```javascript
+  jarallax(document.querySelectorAll('.jarallax'), {
+    zIndex: -50
+  });
+  ```
+</ParamField>
+
+<ParamField path="disableParallax" type="boolean | RegExp | function" default="false">
+  Disable parallax effect on specific user agents or conditions.
+  
+  Can be:
+  - `boolean`: `true` to completely disable parallax
+  - `RegExp`: Regular expression to test against `navigator.userAgent`
+  - `function`: Custom function that returns `true` to disable parallax
+  
+  When disabled, the image is set as a static background.
+
+  ```javascript
+  // Disable on mobile devices
+  jarallax(document.querySelectorAll('.jarallax'), {
+    disableParallax: /iPad|iPhone|iPod|Android/
+  });
+
+  // Or using a function
+  jarallax(document.querySelectorAll('.jarallax'), {
+    disableParallax: function() {
+      return window.innerWidth < 768;
+    }
+  });
+  ```
+</ParamField>
+
+## Data Attribute Usage
+
+All options can be set via data attributes in HTML:
+
+```html
+<div 
+  class="jarallax" 
+  data-jarallax
+  data-type="scale"
+  data-speed="0.3"
+  data-img-src="/images/bg.jpg"
+  data-img-position="center top"
+>
+  <div class="content">
+    Your content here
+  </div>
+</div>
+```
+
+<Note>
+  Data attributes are automatically converted to options. For example, `data-speed` becomes the `speed` option.
+  Boolean strings ('true' and 'false') are automatically converted to actual boolean values.
+</Note>
+
+## Complete Example
+
+```javascript
+import { jarallax } from 'jarallax';
+
+jarallax(document.querySelectorAll('.jarallax'), {
+  type: 'scroll',
+  speed: 0.5,
+  containerClass: 'jarallax-container',
+  imgSrc: null,
+  imgElement: '.jarallax-img',
+  imgSize: 'cover',
+  imgPosition: '50% 50%',
+  imgRepeat: 'no-repeat',
+  keepImg: false,
+  elementInViewport: null,
+  zIndex: -100,
+  disableParallax: false,
+  
+  // Event callbacks
+  onScroll: null,
+  onInit: null,
+  onDestroy: null,
+  onCoverImage: null
+});
+```

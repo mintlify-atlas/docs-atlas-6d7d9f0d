@@ -1,0 +1,109 @@
+---
+title: Introduction
+description: A smooth parallax scrolling library for modern browsers with zero dependencies and full TypeScript support
+---
+
+# Introduction to Jarallax
+
+Jarallax is a powerful, lightweight parallax scrolling library that brings beautiful depth and motion to your web pages. With zero dependencies and full TypeScript support, it offers smooth parallax effects for background images, YouTube videos, Vimeo videos, and self-hosted videos.
+
+## Key Features
+
+<CardGroup cols={2}>
+  <Card title="Zero Dependencies" icon="feather">
+    Pure JavaScript implementation with no external dependencies required. jQuery support is optional.
+  </Card>
+  
+  <Card title="Video Backgrounds" icon="video">
+    Support for YouTube, Vimeo, and self-hosted video backgrounds with parallax effects.
+  </Card>
+  
+  <Card title="TypeScript Ready" icon="code">
+    Full TypeScript definitions included for type-safe development.
+  </Card>
+  
+  <Card title="Multiple Formats" icon="cube">
+    Available in ESM, UMD, and CJS formats for maximum compatibility.
+  </Card>
+</CardGroup>
+
+## What is Parallax Scrolling?
+
+Parallax scrolling creates a sense of depth by moving background elements at a different speed than foreground content. This technique adds visual interest and modern polish to websites.
+
+Jarallax makes implementing parallax effects simple with:
+- **Scroll effects**: Background moves at different speeds
+- **Scale effects**: Elements zoom in or out on scroll
+- **Opacity effects**: Fade in/out based on viewport position
+- **Combined effects**: Mix scroll, scale, and opacity for unique animations
+
+## Browser Support
+
+Jarallax works on all modern browsers and provides graceful fallbacks for older ones:
+
+- Chrome (latest)
+- Firefox (latest)
+- Safari (latest)
+- Edge (latest)
+- Mobile browsers (iOS Safari, Chrome Mobile)
+
+<Note>
+  Jarallax includes built-in options to disable parallax effects on mobile devices if desired, using the `disableParallax` option.
+</Note>
+
+## Performance
+
+Jarallax is highly optimized for performance:
+
+- **Tiny footprint**: Core library is only ~5KB gzipped
+- **Video extension**: Additional ~2KB gzipped when needed
+- **Efficient rendering**: Uses CSS transforms and will-change for GPU acceleration
+- **Smart loading**: Video lazy loading ensures resources load only when needed
+
+## Package Information
+
+<CodeGroup>
+```json package.json
+{
+  "name": "jarallax",
+  "version": "2.2.1",
+  "main": "dist/jarallax.cjs",
+  "module": "dist/jarallax.esm.js",
+  "types": "./typings/index.d.ts"
+}
+```
+</CodeGroup>
+
+## Use Cases
+
+Jarallax is perfect for:
+
+- **Hero sections**: Create engaging landing page headers
+- **Product showcases**: Add depth to product imagery
+- **Storytelling**: Guide users through content with motion
+- **Video backgrounds**: Full-screen video sections with parallax
+- **Image galleries**: Dynamic photo presentations
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Installation" icon="download" href="/installation">
+    Learn how to install Jarallax in your project
+  </Card>
+  
+  <Card title="Quick Start" icon="rocket" href="/quickstart">
+    Get up and running with your first parallax effect
+  </Card>
+</CardGroup>
+
+## Real-World Examples
+
+Jarallax is used in production by thousands of websites and powers:
+
+- **Advanced WordPress Backgrounds**: A popular WordPress plugin with parallax features
+- **Premium themes**: Including Godlike, Youplay, Skylith, and Khaki
+- **Custom web applications**: From portfolios to enterprise sites
+
+<Info>
+  Visit the [official demo site](https://jarallax.nkdev.info/) to see Jarallax in action with interactive examples.
+</Info>

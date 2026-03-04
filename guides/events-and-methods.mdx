@@ -1,0 +1,743 @@
+---
+title: Events and Methods
+description: Control Jarallax instances with events, methods, and the programmatic API
+---
+
+Jarallax provides a comprehensive API for controlling parallax instances through events and methods.
+
+## Methods
+
+Methods allow you to programmatically control Jarallax instances after initialization.
+
+### destroy
+
+Completely removes the Jarallax effect and restores the element to its original state.
+
+<Tabs>
+  <Tab title="JavaScript">
+    ```javascript
+    // Destroy specific elements
+    jarallax(document.querySelectorAll('.jarallax'), 'destroy');
+
+    // Destroy a single element
+    jarallax(document.querySelector('.jarallax'), 'destroy');
+    ```
+  </Tab>
+
+  <Tab title="jQuery">
+    ```javascript
+    $('.jarallax').jarallax('destroy');
+    ```
+  </Tab>
+</Tabs>
+
+<Accordion title="What destroy does">
+  From the source code, the `destroy` method:
+
+  1. Removes the parallax observer
+  2. Restores original styles from `data-jarallax-original-styles` attribute
+  3. Moves the image element back to its original position (if using `<img>` tag)
+  4. Removes the parallax container element from the DOM
+  5. Calls the `onDestroy` callback if defined
+  6. Deletes the jarallax instance from the element
+
+  ```javascript
+  // From core.js
+  destroy() {
+    const self = this;
+
+    removeObserver(self);
+
+    // return styles on container as before jarallax init
+    const originalStylesTag = self.$item.getAttribute('data-jarallax-original-styles');
+    self.$item.removeAttribute('data-jarallax-original-styles');
+    if (!originalStylesTag) {
+      self.$item.removeAttribute('style');
+    } else {
+      self.$item.setAttribute('style', originalStylesTag);
+    }
+
+    // ... restore image and remove container
+
+    if (self.options.onDestroy) {
+      self.options.onDestroy.call(self);
+    }
+
+    delete self.$item.jarallax;
+  }
+  ```
+</Accordion>
+
+<Warning>After calling `destroy`, you'll need to reinitialize Jarallax if you want to use it again on the same elements.</Warning>
+
+### isVisible
+
+Checks if the parallax element is currently visible in the viewport.
+
+<Tabs>
+  <Tab title="JavaScript">
+    ```javascript
+    const visible = jarallax(document.querySelector('.jarallax'), 'isVisible');
+    
+    if (visible) {
+      console.log('Parallax element is visible');
+    }
+    ```
+  </Tab>
+
+  <Tab title="jQuery">
+    ```javascript
+    const visible = $('.jarallax').jarallax('isVisible');
+    
+    if (visible) {
+      console.log('Parallax element is visible');
+    }
+    ```
+  </Tab>
+</Tabs>
+
+**Returns:** `boolean`
+
+<Info>This method returns `true` if the element is currently in the viewport, `false` otherwise.</Info>
+
+### onResize
+
+Manually triggers the resize handler to recalculate and refit the parallax image.
+
+<Tabs>
+  <Tab title="JavaScript">
+    ```javascript
+    // Trigger resize on all parallax elements
+    jarallax(document.querySelectorAll('.jarallax'), 'onResize');
+    ```
+  </Tab>
+
+  <Tab title="jQuery">
+    ```javascript
+    $('.jarallax').jarallax('onResize');
+    ```
+  </Tab>
+</Tabs>
+
+<Accordion title="When to use onResize">
+  Call `onResize` when:
+  
+  - The container element size changes dynamically
+  - Content is loaded that affects layout
+  - Window is resized programmatically
+  - Elements are shown/hidden
+  - Orientation changes on mobile devices
+
+  ```javascript
+  // Example: After loading dynamic content
+  fetch('/api/content')
+    .then(response => response.json())
+    .then(data => {
+      document.querySelector('.jarallax').innerHTML = data.content;
+      
+      // Recalculate parallax after content loads
+      jarallax(document.querySelector('.jarallax'), 'onResize');
+    });
+  ```
+
+  From the source code:
+  ```javascript
+  onResize() {
+    this.coverImage();
+  }
+  ```
+</Accordion>
+
+### onScroll
+
+Manually triggers the scroll handler to recalculate the parallax image position.
+
+<Tabs>
+  <Tab title="JavaScript">
+    ```javascript
+    // Trigger scroll calculation
+    jarallax(document.querySelectorAll('.jarallax'), 'onScroll');
+    ```
+  </Tab>
+
+  <Tab title="jQuery">
+    ```javascript
+    $('.jarallax').jarallax('onScroll');
+    ```
+  </Tab>
+</Tabs>
+
+<Note>Jarallax automatically calls this method on window scroll. You only need to call it manually if you're programmatically scrolling or need to force a position update.</Note>
+
+## Method Examples
+
+### Conditional Destroy
+
+```javascript
+// Initialize parallax
+jarallax(document.querySelectorAll('.jarallax'), {
+  speed: 0.5
+});
+
+// Later, destroy on mobile
+if (window.innerWidth < 768) {
+  jarallax(document.querySelectorAll('.jarallax'), 'destroy');
+}
+```
+
+### Dynamic Content Loading
+
+```javascript
+// Initialize
+jarallax(document.querySelectorAll('.jarallax'));
+
+// After adding content dynamically
+document.querySelector('.jarallax').innerHTML += '<p>New content</p>';
+
+// Force recalculation
+jarallax(document.querySelector('.jarallax'), 'onResize');
+jarallax(document.querySelector('.jarallax'), 'onScroll');
+```
+
+### Visibility-Based Actions
+
+```javascript
+function checkVisibility() {
+  const elements = document.querySelectorAll('.jarallax');
+  
+  elements.forEach(element => {
+    const visible = jarallax(element, 'isVisible');
+    
+    if (visible) {
+      console.log('Element is visible:', element);
+      // Trigger custom actions
+    }
+  });
+}
+
+window.addEventListener('scroll', checkVisibility);
+```
+
+## Events
+
+Events allow you to hook into different stages of the parallax lifecycle.
+
+### onInit
+
+Called after Jarallax initialization completes.
+
+```javascript
+jarallax(document.querySelectorAll('.jarallax'), {
+  speed: 0.5,
+  onInit: function() {
+    console.log('Jarallax initialized on:', this.$item);
+    console.log('Options:', this.options);
+  }
+});
+```
+
+<Accordion title="Context and available properties">
+  Inside event callbacks, `this` refers to the Jarallax instance with access to:
+
+  - `this.$item` - The parallax container element
+  - `this.options` - Current configuration options
+  - `this.image` - Image data object
+  - `this.image.$container` - The parallax image container
+  - `this.image.$item` - The image element
+  - `this.$video` - Video element (if using video extension)
+</Accordion>
+
+### onDestroy
+
+Called after the Jarallax instance is destroyed.
+
+```javascript
+jarallax(document.querySelectorAll('.jarallax'), {
+  speed: 0.5,
+  onDestroy: function() {
+    console.log('Jarallax destroyed on:', this.$item);
+  }
+});
+```
+
+### onCoverImage
+
+Called after the parallax image is covered/fitted to the container.
+
+```javascript
+jarallax(document.querySelectorAll('.jarallax'), {
+  speed: 0.5,
+  onCoverImage: function() {
+    console.log('Image covered');
+  }
+});
+```
+
+<Note>This event is triggered during initialization and whenever the container is resized.</Note>
+
+### onScroll
+
+Called continuously during scrolling with detailed calculation data.
+
+```javascript
+jarallax(document.querySelectorAll('.jarallax'), {
+  speed: 0.5,
+  onScroll: function(calculations) {
+    console.log('Scroll calculations:', calculations);
+  }
+});
+```
+
+<Warning>The `onScroll` event fires frequently during scrolling. Avoid heavy computations in this callback to maintain smooth performance.</Warning>
+
+## onScroll Event Calculations
+
+The `onScroll` event provides detailed information about the parallax element's position and visibility.
+
+### Calculation Object
+
+```javascript
+jarallax(document.querySelectorAll('.jarallax'), {
+  onScroll: function(calculations) {
+    console.log(calculations);
+  }
+});
+```
+
+**Output structure:**
+
+```javascript
+{
+  // Element's bounding rectangle
+  section: DOMRect,
+
+  // Distance from viewport top to element top (when element is below viewport)
+  beforeTop: float,
+
+  // Distance of visible top portion
+  beforeTopEnd: float,
+
+  // Distance scrolled past the top of element
+  afterTop: float,
+
+  // Distance from element bottom to viewport bottom (when element is above viewport bottom)
+  beforeBottom: float,
+
+  // Distance of visible bottom portion
+  beforeBottomEnd: float,
+
+  // Distance element bottom is above viewport top
+  afterBottom: float,
+
+  // Percentage of element visible (0 to 1)
+  visiblePercent: float,
+
+  // Position relative to viewport center (-1 to 1)
+  // -1: element top is at viewport center
+  //  0: element center is at viewport center
+  //  1: element bottom is at viewport center
+  fromViewportCenter: float
+}
+```
+
+### Calculation Properties Explained
+
+<Accordion title="visiblePercent">
+  Represents how much of the element is visible in the viewport.
+
+  - `1.0`: Fully visible
+  - `0.5`: Half visible
+  - `0.0`: Not visible
+
+  ```javascript
+  jarallax(document.querySelectorAll('.jarallax'), {
+    onScroll: function(calc) {
+      if (calc.visiblePercent > 0.8) {
+        console.log('Element is mostly visible');
+      }
+    }
+  });
+  ```
+</Accordion>
+
+<Accordion title="fromViewportCenter">
+  Position relative to the viewport center, ranging from `-1` to `1`.
+
+  - `-1`: Top of element is at viewport center
+  - `0`: Center of element is at viewport center
+  - `1`: Bottom of element is at viewport center
+
+  ```javascript
+  jarallax(document.querySelectorAll('.jarallax'), {
+    onScroll: function(calc) {
+      if (Math.abs(calc.fromViewportCenter) < 0.1) {
+        console.log('Element is centered in viewport');
+      }
+    }
+  });
+  ```
+</Accordion>
+
+<Accordion title="section (rect)">
+  The element's `DOMRect` object containing position and dimensions:
+
+  ```javascript
+  jarallax(document.querySelectorAll('.jarallax'), {
+    onScroll: function(calc) {
+      console.log('Top:', calc.section.top);
+      console.log('Left:', calc.section.left);
+      console.log('Width:', calc.section.width);
+      console.log('Height:', calc.section.height);
+    }
+  });
+  ```
+</Accordion>
+
+### Practical onScroll Examples
+
+<Tabs>
+  <Tab title="Progress Indicator">
+    ```javascript
+    jarallax(document.querySelectorAll('.jarallax'), {
+      onScroll: function(calc) {
+        // Calculate scroll progress through element
+        const progress = 1 - calc.visiblePercent;
+        const progressBar = this.$item.querySelector('.progress-bar');
+        
+        if (progressBar) {
+          progressBar.style.width = (progress * 100) + '%';
+        }
+      }
+    });
+    ```
+  </Tab>
+
+  <Tab title="Trigger Animation">
+    ```javascript
+    jarallax(document.querySelectorAll('.jarallax'), {
+      onScroll: function(calc) {
+        // Trigger animation when element is centered
+        if (Math.abs(calc.fromViewportCenter) < 0.1) {
+          this.$item.classList.add('animate');
+        }
+      }
+    });
+    ```
+  </Tab>
+
+  <Tab title="Custom Parallax Math">
+    ```javascript
+    jarallax(document.querySelectorAll('.jarallax'), {
+      onScroll: function(calc) {
+        // Apply custom transformation based on scroll
+        const customElement = this.$item.querySelector('.custom-element');
+        
+        if (customElement) {
+          const rotation = calc.fromViewportCenter * 45; // Rotate ±45deg
+          customElement.style.transform = `rotate(${rotation}deg)`;
+        }
+      }
+    });
+    ```
+  </Tab>
+
+  <Tab title="Visibility Logging">
+    ```javascript
+    jarallax(document.querySelectorAll('.jarallax'), {
+      onScroll: function(calc) {
+        // Log when element becomes fully visible
+        if (calc.visiblePercent === 1 && !this.loggedVisible) {
+          console.log('Element fully visible');
+          this.loggedVisible = true;
+        }
+        
+        if (calc.visiblePercent < 1) {
+          this.loggedVisible = false;
+        }
+      }
+    });
+    ```
+  </Tab>
+</Tabs>
+
+## Video Extension Events
+
+When using the video extension, additional events are available.
+
+### onVideoInsert
+
+Called when the video element is inserted into the DOM.
+
+```javascript
+import { jarallax, jarallaxVideo } from 'jarallax';
+jarallaxVideo();
+
+jarallax(document.querySelectorAll('.jarallax'), {
+  videoSrc: 'https://www.youtube.com/watch?v=ab0TSkLe-E0',
+  onVideoInsert: function() {
+    console.log('Video element:', this.$video);
+    console.log('Video type:', this.video.type);
+    
+    // Add custom attributes or event listeners
+    this.$video.setAttribute('data-custom', 'value');
+  }
+});
+```
+
+<Info>Access the video element via `this.$video` in the callback.</Info>
+
+### onVideoWorkerInit
+
+Called when the VideoWorker instance is initialized.
+
+```javascript
+jarallax(document.querySelectorAll('.jarallax'), {
+  videoSrc: 'https://www.youtube.com/watch?v=ab0TSkLe-E0',
+  onVideoWorkerInit: function(videoWorker) {
+    console.log('VideoWorker instance:', videoWorker);
+    
+    // Access VideoWorker API
+    videoWorker.on('ready', function() {
+      console.log('Video is ready to play');
+    });
+    
+    videoWorker.on('play', function() {
+      console.log('Video started playing');
+    });
+    
+    videoWorker.on('pause', function() {
+      console.log('Video paused');
+    });
+  }
+});
+```
+
+<Accordion title="VideoWorker events">
+  The VideoWorker instance provides these events:
+
+  - `ready` - Video is loaded and ready to play
+  - `started` - Video has started playing
+  - `play` - Video play event
+  - `pause` - Video pause event
+  - `ended` - Video has ended
+  - `error` - Video loading or playback error
+
+  These are handled internally by Jarallax, but you can add additional listeners in `onVideoWorkerInit`.
+</Accordion>
+
+## Complete API Example
+
+Here's a comprehensive example using methods and events:
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Jarallax API Example</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/jarallax@2/dist/jarallax.min.css" rel="stylesheet">
+    
+    <style>
+      .jarallax {
+        position: relative;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      
+      .controls {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 1000;
+        background: white;
+        padding: 1rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      }
+      
+      button {
+        display: block;
+        width: 100%;
+        margin: 0.5rem 0;
+        padding: 0.5rem 1rem;
+        cursor: pointer;
+      }
+      
+      .info {
+        margin-top: 1rem;
+        font-size: 0.9rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="controls">
+      <h3>Controls</h3>
+      <button onclick="checkVisibility()">Check Visibility</button>
+      <button onclick="triggerResize()">Trigger Resize</button>
+      <button onclick="triggerScroll()">Trigger Scroll</button>
+      <button onclick="destroyParallax()">Destroy Parallax</button>
+      <button onclick="reinitParallax()">Reinitialize</button>
+      <div class="info" id="info">Ready</div>
+    </div>
+
+    <div class="jarallax" id="parallax1">
+      <img class="jarallax-img" src="https://jarallax.nkdev.info/images/image1.jpg" alt="">
+      <h1 style="position: relative; z-index: 1; color: white;">Scroll Down</h1>
+    </div>
+
+    <div style="height: 100vh;"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/jarallax@2/dist/jarallax.min.js"></script>
+    
+    <script>
+      let initialized = false;
+      
+      function initJarallax() {
+        jarallax(document.getElementById('parallax1'), {
+          speed: 0.5,
+          onInit: function() {
+            console.log('Jarallax initialized');
+            updateInfo('Initialized');
+            initialized = true;
+          },
+          onDestroy: function() {
+            console.log('Jarallax destroyed');
+            updateInfo('Destroyed');
+            initialized = false;
+          },
+          onCoverImage: function() {
+            console.log('Image covered');
+          },
+          onScroll: function(calc) {
+            const percent = (calc.visiblePercent * 100).toFixed(2);
+            updateInfo(`Visible: ${percent}%`);
+          }
+        });
+      }
+      
+      function checkVisibility() {
+        const visible = jarallax(document.getElementById('parallax1'), 'isVisible');
+        updateInfo(`Visible: ${visible}`);
+        alert(`Element is ${visible ? 'visible' : 'not visible'}`);
+      }
+      
+      function triggerResize() {
+        jarallax(document.getElementById('parallax1'), 'onResize');
+        updateInfo('Resize triggered');
+      }
+      
+      function triggerScroll() {
+        jarallax(document.getElementById('parallax1'), 'onScroll');
+        updateInfo('Scroll triggered');
+      }
+      
+      function destroyParallax() {
+        if (initialized) {
+          jarallax(document.getElementById('parallax1'), 'destroy');
+        }
+      }
+      
+      function reinitParallax() {
+        if (!initialized) {
+          initJarallax();
+        }
+      }
+      
+      function updateInfo(text) {
+        document.getElementById('info').textContent = text;
+      }
+      
+      // Initialize on load
+      initJarallax();
+    </script>
+  </body>
+</html>
+```
+
+## TypeScript Support
+
+Jarallax includes TypeScript definitions. Here's how to use them:
+
+```typescript
+import { jarallax, JarallaxOptions, JarallaxOnScrollCalculations } from 'jarallax';
+
+const options: JarallaxOptions = {
+  speed: 0.5,
+  type: 'scroll',
+  onScroll: (calculations: JarallaxOnScrollCalculations) => {
+    console.log('Visible percent:', calculations.visiblePercent);
+  }
+};
+
+jarallax(document.querySelectorAll('.jarallax'), options);
+
+// Methods are also typed
+const isVisible: boolean = jarallax(
+  document.querySelector('.jarallax'),
+  'isVisible'
+);
+```
+
+## Best Practices
+
+<Steps>
+  <Step title="Use events for initialization tasks">
+    Perform setup work in `onInit` to ensure Jarallax is fully ready:
+    
+    ```javascript
+    jarallax(document.querySelectorAll('.jarallax'), {
+      onInit: function() {
+        // Safe to access parallax properties
+        this.$item.classList.add('ready');
+      }
+    });
+    ```
+  </Step>
+
+  <Step title="Clean up in onDestroy">
+    Remove event listeners and custom elements in `onDestroy`:
+    
+    ```javascript
+    jarallax(document.querySelectorAll('.jarallax'), {
+      onDestroy: function() {
+        // Clean up custom event listeners
+        this.$item.removeEventListener('custom', handler);
+      }
+    });
+    ```
+  </Step>
+
+  <Step title="Throttle onScroll callbacks">
+    Limit heavy operations in `onScroll` to maintain performance:
+    
+    ```javascript
+    let lastUpdate = 0;
+    
+    jarallax(document.querySelectorAll('.jarallax'), {
+      onScroll: function(calc) {
+        const now = Date.now();
+        if (now - lastUpdate > 100) { // Throttle to 10fps
+          // Perform heavy operation
+          lastUpdate = now;
+        }
+      }
+    });
+    ```
+  </Step>
+</Steps>
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Basic Usage" icon="book" href="/guides/basic-usage">
+    Learn the fundamentals of Jarallax
+  </Card>
+  
+  <Card title="Advanced Options" icon="sliders" href="/guides/advanced-options">
+    Explore advanced configuration options
+  </Card>
+</CardGroup>

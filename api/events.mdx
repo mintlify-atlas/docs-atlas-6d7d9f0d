@@ -1,0 +1,322 @@
+---
+title: 'Events'
+description: 'Event callbacks for Jarallax lifecycle and scroll interactions'
+---
+
+Jarallax provides event callbacks that are triggered at different stages of the parallax lifecycle. These callbacks can be passed as options during initialization.
+
+## Event Callbacks
+
+### onScroll
+
+Called continuously while the parallax is working, providing detailed scroll calculations.
+
+```typescript
+onScroll?: (calculations: JarallaxOnScrollCalculations) => void
+```
+
+<ParamField path="calculations" type="JarallaxOnScrollCalculations">
+  An object containing scroll position calculations and viewport metrics.
+</ParamField>
+
+#### JarallaxOnScrollCalculations Interface
+
+The `calculations` parameter provides the following properties:
+
+<ResponseField name="section" type="DOMRect">
+  The parallax section's bounding client rectangle containing `top`, `left`, `width`, `height`, `right`, and `bottom` properties.
+</ResponseField>
+
+<ResponseField name="beforeTop" type="number">
+  Distance in pixels before the element reaches the top of the viewport. `0` when the element top is at or past the viewport top.
+  
+  Useful for: Detecting when element is about to enter from bottom.
+</ResponseField>
+
+<ResponseField name="beforeTopEnd" type="number">
+  Distance in pixels before the element completely passes the top of the viewport. `0` when element has completely scrolled past the top.
+  
+  Useful for: Detecting when element is fully visible or has passed the top.
+</ResponseField>
+
+<ResponseField name="afterTop" type="number">
+  Distance in pixels after the element top has passed the viewport top. `0` when element hasn't reached the top yet.
+  
+  Useful for: Measuring how far the element has scrolled into view from the top.
+</ResponseField>
+
+<ResponseField name="beforeBottom" type="number">
+  Distance in pixels before the element top reaches the bottom of the viewport. `0` when element top is at or past the viewport bottom.
+  
+  Useful for: Detecting when element is entering from the bottom.
+</ResponseField>
+
+<ResponseField name="beforeBottomEnd" type="number">
+  Distance in pixels before the element bottom passes the viewport bottom. `0` when element has completely exited from the bottom.
+  
+  Useful for: Detecting when element is about to completely leave viewport.
+</ResponseField>
+
+<ResponseField name="afterBottom" type="number">
+  Distance in pixels after the element bottom has passed above the viewport bottom. `0` when element is still visible.
+  
+  Useful for: Measuring how far the element has scrolled out of view.
+</ResponseField>
+
+<ResponseField name="visiblePercent" type="number">
+  Percentage of the element that is visible in the viewport, ranging from `0` to `1`.
+  
+  - `0`: Element is completely out of view
+  - `0.5`: Element is 50% visible
+  - `1`: Element is fully visible in the viewport
+  
+  Useful for: Triggering animations based on visibility, calculating opacity, or implementing scroll-based progress indicators.
+</ResponseField>
+
+<ResponseField name="fromViewportCenter" type="number">
+  Position of the element relative to the center of the viewport, ranging from `-1` to `1`.
+  
+  - `-1`: Element is at the bottom of the viewport
+  - `0`: Element center is aligned with viewport center
+  - `1`: Element is at the top of the viewport
+  
+  Useful for: Center-based parallax effects or symmetrical animations.
+</ResponseField>
+
+#### Usage Example
+
+```javascript
+import { jarallax } from 'jarallax';
+
+jarallax(document.querySelectorAll('.jarallax'), {
+  speed: 0.5,
+  onScroll: function(calculations) {
+    console.log('Visible percent:', calculations.visiblePercent);
+    console.log('From viewport center:', calculations.fromViewportCenter);
+    
+    // Apply custom effects based on visibility
+    if (calculations.visiblePercent > 0.5) {
+      this.$item.classList.add('half-visible');
+    }
+    
+    // Custom opacity based on position
+    const opacity = Math.abs(calculations.fromViewportCenter);
+    this.$item.style.opacity = 1 - opacity;
+  }
+});
+```
+
+#### Calculations Visualization
+
+```javascript
+// Example output when element is partially visible
+{
+  section: DOMRect {
+    top: 200,
+    left: 0,
+    width: 1200,
+    height: 600,
+    right: 1200,
+    bottom: 800
+  },
+  beforeTop: 200,
+  beforeTopEnd: 800,
+  afterTop: 0,
+  beforeBottom: 0,
+  beforeBottomEnd: 400,
+  afterBottom: 0,
+  visiblePercent: 0.67,
+  fromViewportCenter: 0.25
+}
+```
+
+<Note>
+  The `onScroll` callback is performance-optimized and only fires when the element is in or near the viewport. It does not fire continuously when the element is completely out of view.
+</Note>
+
+### onInit
+
+Called once after Jarallax initialization is complete.
+
+```typescript
+onInit?: () => void
+```
+
+This event fires after:
+- The parallax container is created
+- The image is positioned
+- Initial size and scroll calculations are complete
+- The element is ready for parallax effects
+
+#### Usage Example
+
+```javascript
+jarallax(document.querySelectorAll('.jarallax'), {
+  speed: 0.5,
+  onInit: function() {
+    console.log('Jarallax initialized');
+    console.log('Element:', this.$item);
+    console.log('Image container:', this.image.$container);
+    
+    // Add custom classes or trigger animations
+    this.$item.classList.add('jarallax-ready');
+    
+    // Access instance properties
+    console.log('Speed:', this.options.speed);
+    console.log('Type:', this.options.type);
+  }
+});
+```
+
+<Note>
+  Inside the callback, `this` refers to the Jarallax instance, giving you access to instance properties like `this.$item`, `this.image`, and `this.options`.
+</Note>
+
+### onDestroy
+
+Called after the Jarallax instance has been destroyed.
+
+```typescript
+onDestroy?: () => void
+```
+
+This event fires after:
+- The parallax container is removed
+- Original element styles are restored
+- Event listeners and observers are cleaned up
+- The instance is deleted from the element
+
+#### Usage Example
+
+```javascript
+jarallax(document.querySelectorAll('.jarallax'), {
+  speed: 0.5,
+  onDestroy: function() {
+    console.log('Jarallax destroyed');
+    console.log('Element:', this.$item);
+    
+    // Clean up custom modifications
+    this.$item.classList.remove('jarallax-ready');
+    
+    // Remove custom event listeners
+    // Perform cleanup tasks
+  }
+});
+
+// Later, destroy the instance
+jarallax(document.querySelectorAll('.jarallax'), 'destroy');
+```
+
+### onCoverImage
+
+Called after the parallax image is sized and positioned to cover the container.
+
+```typescript
+onCoverImage?: () => void
+```
+
+This event fires:
+- During initialization after the image is first sized
+- Every time the image is resized (e.g., on window resize)
+- When `onResize` method is called
+
+#### Usage Example
+
+```javascript
+jarallax(document.querySelectorAll('.jarallax'), {
+  speed: 0.5,
+  onCoverImage: function() {
+    console.log('Image covered');
+    console.log('Image element:', this.image.$item);
+    console.log('Container:', this.image.$container);
+    
+    // Access image dimensions
+    const imageHeight = this.image.$item.offsetHeight;
+    const containerHeight = this.image.$container.offsetHeight;
+    
+    console.log('Image height:', imageHeight);
+    console.log('Container height:', containerHeight);
+  }
+});
+```
+
+<Note>
+  This callback is useful for debugging image sizing issues or implementing custom image positioning logic.
+</Note>
+
+## Complete Example
+
+Here's a complete example using all event callbacks:
+
+```javascript
+import { jarallax } from 'jarallax';
+
+jarallax(document.querySelectorAll('.jarallax'), {
+  speed: 0.5,
+  type: 'scroll',
+  
+  onInit: function() {
+    console.log('✓ Jarallax initialized');
+    this.$item.classList.add('parallax-ready');
+    
+    // Dispatch custom event
+    this.$item.dispatchEvent(new CustomEvent('jarallax:ready'));
+  },
+  
+  onScroll: function(calc) {
+    // Update progress indicator
+    const progress = calc.visiblePercent * 100;
+    const progressBar = this.$item.querySelector('.progress');
+    if (progressBar) {
+      progressBar.style.width = `${progress}%`;
+    }
+    
+    // Trigger waypoint when 50% visible
+    if (calc.visiblePercent >= 0.5 && !this.waypointTriggered) {
+      this.waypointTriggered = true;
+      this.$item.classList.add('waypoint-reached');
+    }
+  },
+  
+  onCoverImage: function() {
+    console.log('✓ Image covered and positioned');
+  },
+  
+  onDestroy: function() {
+    console.log('✓ Jarallax destroyed');
+    this.$item.classList.remove('parallax-ready', 'waypoint-reached');
+    
+    // Dispatch custom event
+    this.$item.dispatchEvent(new CustomEvent('jarallax:destroyed'));
+  }
+});
+```
+
+## Event Execution Order
+
+During initialization:
+1. **onInit** - Fires once after setup is complete
+2. **onCoverImage** - Fires after initial image sizing
+3. **onScroll** - Fires for initial scroll position
+
+During normal operation:
+- **onScroll** - Fires on every scroll event (when element is in/near viewport)
+- **onCoverImage** - Fires on window resize
+
+During destruction:
+- **onDestroy** - Fires once when instance is destroyed
+
+## Context (this)
+
+<Warning>
+  Inside all event callbacks, `this` refers to the Jarallax instance. You have access to:
+  
+  - `this.$item` - The main parallax element
+  - `this.image` - Image-related properties and elements
+  - `this.image.$container` - The parallax container element
+  - `this.image.$item` - The parallax image element
+  - `this.options` - The configuration options
+  - `this.parallaxScrollDistance` - Calculated scroll distance for the parallax effect
+  
+  If you need to access the original element context, store a reference before initialization.
+</Warning>

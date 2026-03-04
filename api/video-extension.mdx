@@ -1,0 +1,459 @@
+---
+title: 'Video Extension'
+description: 'Video parallax backgrounds with YouTube, Vimeo, and self-hosted videos'
+---
+
+The Jarallax video extension enables video backgrounds with parallax effects. It supports YouTube, Vimeo, and self-hosted video files.
+
+## Installation
+
+The video extension requires the separate `jarallax-video.js` file:
+
+<CodeGroup>
+```javascript ES Module
+import { jarallax, jarallaxVideo } from 'jarallax';
+
+// Initialize video extension
+jarallaxVideo();
+```
+
+```html UMD
+<script src="jarallax.min.js"></script>
+<script src="jarallax-video.min.js"></script>
+```
+
+```html CDN
+<script src="https://cdn.jsdelivr.net/npm/jarallax@2/dist/jarallax.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jarallax@2/dist/jarallax-video.min.js"></script>
+```
+</CodeGroup>
+
+## Initialization
+
+### jarallaxVideo()
+
+Initializes the video extension functionality. Must be called before using video options.
+
+```typescript
+jarallaxVideo(jarallaxInstance?: typeof jarallax): void
+```
+
+<ParamField path="jarallaxInstance" type="typeof jarallax">
+  Optional. The jarallax instance to extend. If not provided, uses the global `jarallax` instance.
+</ParamField>
+
+```javascript
+import { jarallax, jarallaxVideo } from 'jarallax';
+
+// Initialize the video extension
+jarallaxVideo();
+
+// Now you can use video options
+jarallax(document.querySelectorAll('.jarallax'), {
+  speed: 0.2,
+  videoSrc: 'https://www.youtube.com/watch?v=ab0TSkLe-E0'
+});
+```
+
+<Note>
+  The video extension must be initialized **before** calling `jarallax()` with video options. Typically, call `jarallaxVideo()` once at the start of your application.
+</Note>
+
+## Video Options
+
+When the video extension is loaded, these additional options become available:
+
+### videoSrc
+
+<ParamField path="videoSrc" type="string" default="null">
+  URL of the video to use as background. Supports:
+  
+  - **YouTube**: Full URL or watch ID
+  - **Vimeo**: Full URL or video ID  
+  - **Self-hosted**: Path with format prefixes
+  
+  Can also be set via the `data-jarallax-video` HTML attribute.
+</ParamField>
+
+#### YouTube Examples
+
+```javascript
+// Full URL
+jarallax(element, {
+  videoSrc: 'https://www.youtube.com/watch?v=ab0TSkLe-E0'
+});
+
+// Watch ID only
+jarallax(element, {
+  videoSrc: 'ab0TSkLe-E0'
+});
+```
+
+```html
+<div class="jarallax" data-jarallax data-video-src="https://www.youtube.com/watch?v=ab0TSkLe-E0">
+  Your content here...
+</div>
+```
+
+#### Vimeo Examples
+
+```javascript
+// Full URL
+jarallax(element, {
+  videoSrc: 'https://vimeo.com/110138539'
+});
+
+// Video ID only
+jarallax(element, {
+  videoSrc: 'vimeo:110138539'
+});
+```
+
+```html
+<div class="jarallax" data-jarallax data-video-src="https://vimeo.com/110138539">
+  Your content here...
+</div>
+```
+
+#### Self-Hosted Video Examples
+
+```javascript
+// Single format
+jarallax(element, {
+  videoSrc: 'mp4:./videos/local-video.mp4'
+});
+
+// Multiple formats for browser compatibility
+jarallax(element, {
+  videoSrc: 'mp4:./videos/video.mp4,webm:./videos/video.webm,ogv:./videos/video.ogv'
+});
+```
+
+```html
+<div 
+  class="jarallax" 
+  data-jarallax 
+  data-video-src="mp4:./video/local.mp4,webm:./video/local.webm"
+>
+  Your content here...
+</div>
+```
+
+<Note>
+  Self-hosted videos require format prefixes (`mp4:`, `webm:`, `ogv:`). You only need one format, but providing multiple formats ensures maximum browser compatibility.
+</Note>
+
+### videoClass
+
+<ParamField path="videoClass" type="string" default="jarallax-video">
+  CSS class attribute applied to the video element.
+  
+  The video type is automatically appended, creating classes like:
+  - `jarallax-video jarallax-video-youtube`
+  - `jarallax-video jarallax-video-vimeo`
+  - `jarallax-video jarallax-video-local`
+</ParamField>
+
+```javascript
+jarallax(document.querySelectorAll('.jarallax'), {
+  videoSrc: 'https://www.youtube.com/watch?v=ab0TSkLe-E0',
+  videoClass: 'my-video-background'
+});
+```
+
+### videoStartTime
+
+<ParamField path="videoStartTime" type="number" default="0">
+  Start time in seconds when the video begins playing.
+  
+  This value is applied on initial play and after each loop iteration.
+</ParamField>
+
+```javascript
+// Start video at 30 seconds
+jarallax(document.querySelectorAll('.jarallax'), {
+  videoSrc: 'https://www.youtube.com/watch?v=ab0TSkLe-E0',
+  videoStartTime: 30
+});
+```
+
+```html
+<div class="jarallax" data-jarallax data-video-src="..." data-video-start-time="30">
+  Your content here...
+</div>
+```
+
+### videoEndTime
+
+<ParamField path="videoEndTime" type="number" default="0">
+  End time in seconds when the video stops playing.
+  
+  When set to `0` (default), the video plays until the natural end.
+</ParamField>
+
+```javascript
+// Play only 60 seconds of the video
+jarallax(document.querySelectorAll('.jarallax'), {
+  videoSrc: 'https://www.youtube.com/watch?v=ab0TSkLe-E0',
+  videoStartTime: 30,
+  videoEndTime: 90
+});
+```
+
+### videoVolume
+
+<ParamField path="videoVolume" type="number" default="0">
+  Video volume level from `0` to `100`.
+  
+  Default is `0` (muted) since most browsers require user interaction for audio playback.
+</ParamField>
+
+```javascript
+// Set volume to 50%
+jarallax(document.querySelectorAll('.jarallax'), {
+  videoSrc: 'https://www.youtube.com/watch?v=ab0TSkLe-E0',
+  videoVolume: 50
+});
+```
+
+<Warning>
+  Many browsers block autoplay videos with sound. It's recommended to keep videos muted (`videoVolume: 0`) for background videos to ensure they play automatically.
+</Warning>
+
+### videoLoop
+
+<ParamField path="videoLoop" type="boolean" default="true">
+  Whether to loop the video infinitely.
+  
+  When `false`, the video plays once and stops. When using `videoStartTime`, the loop restarts at the specified time.
+</ParamField>
+
+```javascript
+// Play video once without looping
+jarallax(document.querySelectorAll('.jarallax'), {
+  videoSrc: 'https://www.youtube.com/watch?v=ab0TSkLe-E0',
+  videoLoop: false
+});
+```
+
+### videoPlayOnlyVisible
+
+<ParamField path="videoPlayOnlyVisible" type="boolean" default="true">
+  Play video only when the parallax element is visible in the viewport.
+  
+  Automatically pauses the video when scrolled out of view and resumes when visible again. Improves performance and reduces bandwidth usage.
+</ParamField>
+
+```javascript
+jarallax(document.querySelectorAll('.jarallax'), {
+  videoSrc: 'https://www.youtube.com/watch?v=ab0TSkLe-E0',
+  videoPlayOnlyVisible: true
+});
+```
+
+### videoLazyLoading
+
+<ParamField path="videoLazyLoading" type="boolean" default="true">
+  Preload and insert videos only when the parallax element becomes visible in the viewport.
+  
+  Significantly improves initial page load performance by deferring video loading until needed.
+</ParamField>
+
+```javascript
+jarallax(document.querySelectorAll('.jarallax'), {
+  videoSrc: 'https://www.youtube.com/watch?v=ab0TSkLe-E0',
+  videoLazyLoading: true
+});
+```
+
+<Note>
+  Lazy loading is highly recommended for pages with multiple video backgrounds or when the video is below the fold.
+</Note>
+
+### disableVideo
+
+<ParamField path="disableVideo" type="boolean | RegExp | function" default="false">
+  Disable video loading on specific user agents or conditions.
+  
+  Can be:
+  - `boolean`: `true` to completely disable video
+  - `RegExp`: Regular expression to test against `navigator.userAgent`
+  - `function`: Custom function that returns `true` to disable video
+  
+  When disabled, falls back to the image background if available.
+</ParamField>
+
+```javascript
+// Disable videos on mobile devices
+jarallax(document.querySelectorAll('.jarallax'), {
+  videoSrc: 'https://www.youtube.com/watch?v=ab0TSkLe-E0',
+  imgSrc: './images/fallback.jpg',
+  disableVideo: /iPad|iPhone|iPod|Android/
+});
+
+// Or using a function
+jarallax(document.querySelectorAll('.jarallax'), {
+  videoSrc: 'https://www.youtube.com/watch?v=ab0TSkLe-E0',
+  imgSrc: './images/fallback.jpg',
+  disableVideo: function() {
+    return window.innerWidth < 768 || navigator.connection?.saveData;
+  }
+});
+```
+
+## Video Events
+
+### onVideoInsert
+
+Called immediately after the video element is inserted into the parallax container.
+
+```typescript
+onVideoInsert?: () => void
+```
+
+At this point, the video element is available via `this.$video`.
+
+```javascript
+jarallax(document.querySelectorAll('.jarallax'), {
+  videoSrc: 'https://www.youtube.com/watch?v=ab0TSkLe-E0',
+  onVideoInsert: function() {
+    console.log('Video inserted:', this.$video);
+    console.log('Video type:', this.video.type);
+    
+    // Apply custom attributes or styles
+    this.$video.setAttribute('data-custom', 'value');
+  }
+});
+```
+
+### onVideoWorkerInit
+
+Called after the VideoWorker script is initialized, before the video is inserted.
+
+```typescript
+onVideoWorkerInit?: (videoWorker: VideoWorker) => void
+```
+
+<ParamField path="videoWorker" type="VideoWorker">
+  The VideoWorker instance that handles video playback. Provides methods like `play()`, `pause()`, and events.
+</ParamField>
+
+```javascript
+jarallax(document.querySelectorAll('.jarallax'), {
+  videoSrc: 'https://www.youtube.com/watch?v=ab0TSkLe-E0',
+  onVideoWorkerInit: function(videoWorker) {
+    console.log('VideoWorker initialized:', videoWorker);
+    console.log('Is valid:', videoWorker.isValid());
+    console.log('Video ID:', videoWorker.videoID);
+    
+    // Listen to VideoWorker events
+    videoWorker.on('ready', () => {
+      console.log('Video is ready to play');
+    });
+    
+    videoWorker.on('started', () => {
+      console.log('Video playback started');
+    });
+  }
+});
+```
+
+## Complete Video Example
+
+```javascript
+import { jarallax, jarallaxVideo } from 'jarallax';
+import 'jarallax/dist/jarallax.min.css';
+
+// Initialize video extension
+jarallaxVideo();
+
+// Configure video parallax
+jarallax(document.querySelectorAll('.jarallax-video'), {
+  speed: 0.5,
+  videoSrc: 'https://www.youtube.com/watch?v=ab0TSkLe-E0',
+  videoStartTime: 10,
+  videoEndTime: 70,
+  videoVolume: 0,
+  videoLoop: true,
+  videoPlayOnlyVisible: true,
+  videoLazyLoading: true,
+  imgSrc: './images/video-poster.jpg',
+  
+  // Mobile fallback
+  disableVideo: /iPad|iPhone|iPod|Android/,
+  
+  onInit: function() {
+    console.log('Parallax initialized');
+  },
+  
+  onVideoWorkerInit: function(videoWorker) {
+    console.log('VideoWorker initialized');
+    
+    videoWorker.on('ready', () => {
+      console.log('Video ready');
+    });
+    
+    videoWorker.on('error', (error) => {
+      console.error('Video error:', error);
+    });
+  },
+  
+  onVideoInsert: function() {
+    console.log('Video element inserted:', this.$video);
+    this.$video.setAttribute('aria-hidden', 'true');
+  }
+});
+```
+
+## HTML Data Attribute Example
+
+```html
+<div 
+  class="jarallax"
+  data-jarallax
+  data-speed="0.2"
+  data-video-src="https://www.youtube.com/watch?v=ab0TSkLe-E0"
+  data-video-start-time="10"
+  data-video-end-time="70"
+  data-video-volume="0"
+  data-video-loop="true"
+  data-video-play-only-visible="true"
+  data-video-lazy-loading="true"
+  data-img-src="./images/poster.jpg"
+>
+  <div class="content">
+    <h1>Video Background</h1>
+    <p>Your content here</p>
+  </div>
+</div>
+```
+
+## Video Types
+
+The extension automatically detects the video type:
+
+<Card title="YouTube" icon="youtube">
+  Supports standard YouTube URLs and video IDs. Automatically uses YouTube iframe API.
+</Card>
+
+<Card title="Vimeo" icon="vimeo">
+  Supports Vimeo URLs and video IDs. Automatically uses Vimeo Player API.
+</Card>
+
+<Card title="Self-Hosted" icon="video">
+  Supports MP4, WebM, and OGV formats. Uses HTML5 video element with native controls disabled.
+</Card>
+
+## Performance Tips
+
+<Note>
+  **Enable lazy loading**: Keep `videoLazyLoading: true` to defer video loading until needed.
+  
+  **Use visibility control**: Keep `videoPlayOnlyVisible: true` to pause videos when not in view.
+  
+  **Provide fallback images**: Always set `imgSrc` as a fallback for when videos are disabled or fail to load.
+  
+  **Disable on mobile**: Use `disableVideo` to show static images on mobile devices to save bandwidth.
+  
+  **Optimize video files**: For self-hosted videos, compress and optimize file sizes. Consider using a CDN.
+</Note>

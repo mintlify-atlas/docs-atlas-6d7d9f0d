@@ -1,97 +1,255 @@
 ---
-title: "Introduction"
-description: "Welcome to the new home for your documentation"
+title: "Jarallax Documentation"
+description: "Smooth parallax scrolling for modern browsers"
+mode: "custom"
 ---
 
-## Setting up
+<div className="relative bg-black text-white overflow-hidden">
+  {/* Hero Section */}
+  <div className="relative py-20 px-4 sm:px-6 lg:px-8">
+    <div className="max-w-7xl mx-auto">
+      <div className="grid lg:grid-cols-12 gap-8 items-center">
+        <div className="lg:col-span-7">
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 text-white">
+            Smooth Parallax Scrolling for Modern Browsers
+          </h1>
+          <p className="text-lg sm:text-xl text-gray-400 mb-8 max-w-2xl">
+            Create stunning parallax effects with images, videos, and inline elements. Support for YouTube, Vimeo, and self-hosted videos with zero dependencies.
+          </p>
+          <div className="flex flex-wrap gap-4">
+            <a 
+              href="/quickstart" 
+              className="inline-flex items-center px-6 py-3 bg-[#7c7c7c] text-white font-semibold rounded-lg hover:bg-[#8c8c8c] transition-colors"
+            >
+              Get Started
+            </a>
+            <a 
+              href="/api/options" 
+              className="inline-flex items-center px-6 py-3 border border-white/30 bg-white/10 text-white font-semibold rounded-lg hover:bg-white/20 transition-colors"
+            >
+              Explore API
+            </a>
+          </div>
+        </div>
+        <div className="lg:col-span-5 hidden lg:block">
+          <div className="relative h-96 flex items-center justify-center">
+            <div className="absolute inset-0 bg-gradient-to-br from-[#7c7c7c]/20 to-transparent rounded-2xl"></div>
+            <svg className="w-64 h-64 text-[#7c7c7c]/40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
-Get your documentation site up and running in minutes.
+{/* Quick Start Section */}
+<div className="mt-16 mb-16 max-w-5xl mx-auto px-6">
+  <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-4">
+    Quick Start
+  </h2>
+  <p className="text-base text-gray-600 dark:text-gray-400 mb-8">
+    Get up and running with Jarallax in just a few steps.
+  </p>
+  
+  <Steps>
+    <Step title="Install Jarallax">
+      Install the package using your preferred package manager.
+      
+      ```bash npm
+      npm install jarallax
+      ```
+      
+      ```bash yarn
+      yarn add jarallax
+      ```
+      
+      ```bash pnpm
+      pnpm add jarallax
+      ```
+    </Step>
+    
+    <Step title="Import and Initialize">
+      Import Jarallax in your JavaScript file and initialize it on your elements.
+      
+      ```javascript
+      import { jarallax } from 'jarallax';
+      import 'jarallax/dist/jarallax.min.css';
 
-<Card
-  title="Start here"
-  icon="rocket"
-  href="/quickstart"
-  horizontal
->
-  Follow our three step quickstart guide.
-</Card>
+      jarallax(document.querySelectorAll('.jarallax'), {
+        speed: 0.2
+      });
+      ```
+    </Step>
+    
+    <Step title="Add HTML Markup">
+      Add the appropriate HTML structure for your parallax elements.
+      
+      ```html
+      <div class="jarallax">
+        <img class="jarallax-img" src="path/to/image.jpg" alt="">
+        Your content here...
+      </div>
+      ```
+    </Step>
+    
+    <Step title="Customize Options">
+      Explore the full range of options to create your perfect parallax effect.
+      
+      <Card title="View All Options" icon="sliders" href="/api/options">
+        Configure speed, type, images, videos, and more
+      </Card>
+    </Step>
+  </Steps>
+</div>
 
-## Make it yours
+{/* Features Grid */}
+<div className="mt-16 mb-16 max-w-5xl mx-auto px-6">
+  <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-4">
+    Key Features
+  </h2>
+  <p className="text-base text-gray-600 dark:text-gray-400 mb-8">
+    Everything you need to create stunning parallax effects.
+  </p>
+  
+  <CardGroup cols={3}>
+    <Card title="Zero Dependencies" icon="feather" href="/introduction">
+      Pure JavaScript with no dependencies. jQuery support is optional.
+    </Card>
+    <Card title="Video Backgrounds" icon="video" href="/guides/video-backgrounds">
+      Support for YouTube, Vimeo, and self-hosted video backgrounds.
+    </Card>
+    <Card title="Multiple Effects" icon="wand-magic-sparkles" href="/guides/advanced-options">
+      Choose from scroll, scale, opacity, and combined effect types.
+    </Card>
+    <Card title="TypeScript Ready" icon="code" href="/api/options">
+      Complete TypeScript definitions included for type safety.
+    </Card>
+    <Card title="Framework Support" icon="layer-group" href="/examples/react-nextjs">
+      Works seamlessly with React, Next.js, Vue, and other frameworks.
+    </Card>
+    <Card title="Mobile Optimized" icon="mobile" href="/guides/advanced-options">
+      Configurable mobile device detection and fallback options.
+    </Card>
+  </CardGroup>
+</div>
 
-Design a docs site that looks great and empowers your users.
+{/* Explore by Topic */}
+<div className="mt-16 mb-16 max-w-5xl mx-auto px-6">
+  <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-4">
+    Explore by Topic
+  </h2>
+  <p className="text-base text-gray-600 dark:text-gray-400 mb-8">
+    Find detailed guides and examples for your use case.
+  </p>
+  
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <a href="/guides/basic-usage" className="group block rounded-2xl border border-gray-200 dark:border-[#27272a] hover:border-[#7c7c7c] dark:hover:border-[#7c7c7c] overflow-hidden no-underline transition-colors bg-white dark:bg-[#1a1d27]">
+      <div className="p-6">
+        <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100 mb-2">
+          Basic Usage Guide
+        </h3>
+        <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
+          Learn the fundamentals of creating parallax effects with images and background elements.
+        </p>
+        <div className="flex items-center text-sm text-gray-600 dark:text-gray-400 group-hover:text-[#7c7c7c] transition-colors">
+          Read guide
+          <svg className="ml-2 w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+          </svg>
+        </div>
+      </div>
+    </a>
 
-<Columns cols={2}>
-  <Card
-    title="Edit locally"
-    icon="pen-to-square"
-    href="/development"
-  >
-    Edit your docs locally and preview them in real time.
-  </Card>
-  <Card
-    title="Customize your site"
-    icon="palette"
-    href="/essentials/settings"
-  >
-    Customize the design and colors of your site to match your brand.
-  </Card>
-    <Card
-    title="Set up navigation"
-    icon="map"
-    href="/essentials/navigation"
-  >
-    Organize your docs to help users find what they need and succeed with your product.
-  </Card>
-  <Card
-    title="API documentation"
-    icon="terminal"
-    href="/api-reference/introduction"
-  >
-    Auto-generate API documentation from OpenAPI specifications.
-  </Card>
-</Columns>
+    <a href="/guides/video-backgrounds" className="group block rounded-2xl border border-gray-200 dark:border-[#27272a] hover:border-[#7c7c7c] dark:hover:border-[#7c7c7c] overflow-hidden no-underline transition-colors bg-white dark:bg-[#1a1d27]">
+      <div className="p-6">
+        <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100 mb-2">
+          Video Backgrounds
+        </h3>
+        <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
+          Create immersive parallax effects with YouTube, Vimeo, or self-hosted video backgrounds.
+        </p>
+        <div className="flex items-center text-sm text-gray-600 dark:text-gray-400 group-hover:text-[#7c7c7c] transition-colors">
+          Read guide
+          <svg className="ml-2 w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+          </svg>
+        </div>
+      </div>
+    </a>
 
-## Create beautiful pages
+    <a href="/examples/vanilla-javascript" className="group block rounded-2xl border border-gray-200 dark:border-[#27272a] hover:border-[#7c7c7c] dark:hover:border-[#7c7c7c] overflow-hidden no-underline transition-colors bg-white dark:bg-[#1a1d27]">
+      <div className="p-6">
+        <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100 mb-2">
+          Framework Examples
+        </h3>
+        <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
+          Real-world examples for vanilla JavaScript, React, Next.js, and jQuery projects.
+        </p>
+        <div className="flex items-center text-sm text-gray-600 dark:text-gray-400 group-hover:text-[#7c7c7c] transition-colors">
+          View examples
+          <svg className="ml-2 w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+          </svg>
+        </div>
+      </div>
+    </a>
 
-Everything you need to create world-class documentation.
+    <a href="/api/options" className="group block rounded-2xl border border-gray-200 dark:border-[#27272a] hover:border-[#7c7c7c] dark:hover:border-[#7c7c7c] overflow-hidden no-underline transition-colors bg-white dark:bg-[#1a1d27]">
+      <div className="p-6">
+        <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100 mb-2">
+          Complete API Reference
+        </h3>
+        <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
+          Detailed documentation of all options, methods, events, and the video extension API.
+        </p>
+        <div className="flex items-center text-sm text-gray-600 dark:text-gray-400 group-hover:text-[#7c7c7c] transition-colors">
+          Explore API
+          <svg className="ml-2 w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+          </svg>
+        </div>
+      </div>
+    </a>
+  </div>
+</div>
 
-<Columns cols={2}>
-  <Card
-    title="Write with MDX"
-    icon="pen-fancy"
-    href="/essentials/markdown"
-  >
-    Use MDX to style your docs pages.
-  </Card>
-  <Card
-    title="Code samples"
-    icon="code"
-    href="/essentials/code"
-  >
-    Add sample code to demonstrate how to use your product.
-  </Card>
-  <Card
-    title="Images"
-    icon="image"
-    href="/essentials/images"
-  >
-    Display images and other media.
-  </Card>
-  <Card
-    title="Reusable snippets"
-    icon="recycle"
-    href="/essentials/reusable-snippets"
-  >
-    Write once and reuse across your docs.
-  </Card>
-</Columns>
+{/* Resources Section */}
+<div className="mt-16 mb-16 max-w-5xl mx-auto px-6">
+  <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-4">
+    Resources & Community
+  </h2>
+  <p className="text-base text-gray-600 dark:text-gray-400 mb-8">
+    Get help and stay connected with the Jarallax community.
+  </p>
+  
+  <CardGroup cols={2}>
+    <Card title="GitHub Repository" icon="github" href="https://github.com/nk-o/jarallax">
+      Browse source code, report issues, and contribute to the project.
+    </Card>
+    <Card title="npm Package" icon="box" href="https://www.npmjs.com/package/jarallax">
+      View package details, version history, and download statistics.
+    </Card>
+  </CardGroup>
+</div>
 
-## Need inspiration?
-
-<Card
-  title="See complete examples"
-  icon="stars"
-  href="https://mintlify.com/customers"
->
-  Browse our showcase of exceptional documentation sites.
-</Card>
+{/* Closing CTA */}
+<div className="mt-16 mb-16 max-w-5xl mx-auto px-6">
+  <div className="rounded-2xl border border-gray-200 dark:border-[#27272a] bg-white dark:bg-[#1a1d27] p-8 sm:p-12">
+    <div className="text-center">
+      <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-4">
+        Ready to Create Stunning Parallax Effects?
+      </h2>
+      <p className="text-base text-gray-600 dark:text-gray-400 mb-8 max-w-2xl mx-auto">
+        Get started with Jarallax today and bring your website to life with smooth, performant parallax scrolling.
+      </p>
+      <a 
+        href="/quickstart" 
+        className="inline-flex items-center px-6 py-3 bg-[#7c7c7c] text-white font-semibold rounded-lg hover:bg-[#8c8c8c] transition-colors"
+      >
+        Start Building
+      </a>
+    </div>
+  </div>
+</div>

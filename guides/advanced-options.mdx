@@ -1,0 +1,525 @@
+---
+title: Advanced Options
+description: Master advanced parallax techniques including different effect types, mobile optimization, and performance tuning
+---
+
+Jarallax offers advanced configuration options to create unique parallax effects and optimize performance across devices.
+
+## Parallax Types
+
+Jarallax supports multiple parallax effect types through the `type` option.
+
+### scroll (Default)
+
+Standard parallax scrolling effect where the background moves at a different speed than the content.
+
+```javascript
+jarallax(document.querySelectorAll('.jarallax'), {
+  type: 'scroll', // Default
+  speed: 0.5
+});
+```
+
+<Info>This is the most common parallax effect. The background scrolls slower than the page scroll.</Info>
+
+### scale
+
+Scales (zooms) the image based on scroll position instead of translating it.
+
+```javascript
+jarallax(document.querySelectorAll('.jarallax'), {
+  type: 'scale',
+  speed: 0.5
+});
+```
+
+<Tabs>
+  <Tab title="Positive Speed">
+    ```javascript
+    jarallax(document.querySelectorAll('.jarallax'), {
+      type: 'scale',
+      speed: 0.5 // Zooms in as you scroll
+    });
+    ```
+    The image starts zoomed out and scales up as you scroll through it.
+  </Tab>
+
+  <Tab title="Negative Speed">
+    ```javascript
+    jarallax(document.querySelectorAll('.jarallax'), {
+      type: 'scale',
+      speed: -0.5 // Zooms out as you scroll
+    });
+    ```
+    The image starts zoomed in and scales down as you scroll through it.
+  </Tab>
+</Tabs>
+
+### opacity
+
+Fades the image in and out based on its visibility in the viewport.
+
+```javascript
+jarallax(document.querySelectorAll('.jarallax'), {
+  type: 'opacity',
+  speed: 0.5
+});
+```
+
+<Note>The `speed` option affects how the opacity changes. The image opacity is calculated based on how much of the element is visible in the viewport.</Note>
+
+### scroll-opacity
+
+Combines the scroll effect with opacity changes.
+
+```javascript
+jarallax(document.querySelectorAll('.jarallax'), {
+  type: 'scroll-opacity',
+  speed: 0.5
+});
+```
+
+<Tip>This creates a more dynamic effect where the background both moves and fades simultaneously.</Tip>
+
+### scale-opacity
+
+Combines the scale effect with opacity changes.
+
+```javascript
+jarallax(document.querySelectorAll('.jarallax'), {
+  type: 'scale-opacity',
+  speed: 0.5
+});
+```
+
+### Type Comparison
+
+<CodeGroup>
+```javascript scroll
+jarallax(document.querySelectorAll('.jarallax'), {
+  type: 'scroll',
+  speed: 0.5
+});
+```
+
+```javascript scale
+jarallax(document.querySelectorAll('.jarallax'), {
+  type: 'scale',
+  speed: 0.5
+});
+```
+
+```javascript opacity
+jarallax(document.querySelectorAll('.jarallax'), {
+  type: 'opacity',
+  speed: 0.5
+});
+```
+
+```javascript scroll-opacity
+jarallax(document.querySelectorAll('.jarallax'), {
+  type: 'scroll-opacity',
+  speed: 0.5
+});
+```
+
+```javascript scale-opacity
+jarallax(document.querySelectorAll('.jarallax'), {
+  type: 'scale-opacity',
+  speed: 0.5
+});
+```
+</CodeGroup>
+
+## Speed Configuration
+
+The `speed` option controls the intensity of the parallax effect. It accepts values from `-1.0` to `2.0`.
+
+<Accordion title="Understanding Speed Values">
+  ```javascript
+  // Speed is constrained between -1.0 and 2.0
+  self.options.speed = Math.min(2, Math.max(-1, parseFloat(self.options.speed)));
+  ```
+
+  - **`0`**: Background is completely fixed (no movement)
+  - **`0.5`** (default): Standard parallax effect
+  - **`1.0`**: Background moves at the same speed as scrolling (no parallax)
+  - **`-1.0` to `0`**: Reverse parallax (background moves opposite direction)
+  - **`0` to `1.0`**: Slower than scroll (classic parallax)
+  - **`1.0` to `2.0`**: Faster than scroll
+</Accordion>
+
+<Accordion title="Speed Examples">
+  <Tabs>
+    <Tab title="Slow Parallax">
+      ```javascript
+      jarallax(document.querySelectorAll('.jarallax'), {
+        speed: 0.2 // Subtle effect
+      });
+      ```
+    </Tab>
+
+    <Tab title="Fast Parallax">
+      ```javascript
+      jarallax(document.querySelectorAll('.jarallax'), {
+        speed: 0.8 // More dramatic effect
+      });
+      ```
+    </Tab>
+
+    <Tab title="Fixed Background">
+      ```javascript
+      jarallax(document.querySelectorAll('.jarallax'), {
+        speed: 0 // No movement
+      });
+      ```
+    </Tab>
+
+    <Tab title="Reverse Parallax">
+      ```javascript
+      jarallax(document.querySelectorAll('.jarallax'), {
+        speed: -0.5 // Moves in opposite direction
+      });
+      ```
+    </Tab>
+  </Tabs>
+</Accordion>
+
+## Mobile Device Detection
+
+Jarallax provides flexible options for disabling parallax on mobile devices to improve performance.
+
+### Using Regular Expressions
+
+```javascript
+jarallax(document.querySelectorAll('.jarallax'), {
+  disableParallax: /iPad|iPhone|iPod|Android/
+});
+```
+
+### Using Functions
+
+```javascript
+jarallax(document.querySelectorAll('.jarallax'), {
+  disableParallax: function() {
+    return /iPad|iPhone|iPod|Android/.test(navigator.userAgent);
+  }
+});
+```
+
+### Custom Detection Logic
+
+```javascript
+jarallax(document.querySelectorAll('.jarallax'), {
+  disableParallax: function() {
+    // Disable on small screens
+    return window.innerWidth < 768;
+  }
+});
+```
+
+<Warning>When parallax is disabled, the image will be displayed as a standard background without the parallax effect.</Warning>
+
+### Disable Video on Mobile
+
+Separately control video background loading on mobile:
+
+```javascript
+jarallax(document.querySelectorAll('.jarallax'), {
+  videoSrc: 'https://www.youtube.com/watch?v=ab0TSkLe-E0',
+  disableVideo: /iPad|iPhone|iPod|Android/,
+  disableParallax: false // Keep parallax on mobile, just disable video
+});
+```
+
+<Tip>You can disable video loading while keeping the parallax effect on mobile devices for better performance.</Tip>
+
+## Performance Optimization
+
+### Image Position
+
+Jarallax automatically determines the best CSS position value (`fixed` or `absolute`) for optimal performance:
+
+```javascript
+// From core.js
+self.image = {
+  // Position is set to 'fixed' by default for better performance
+  position: 'fixed'
+};
+
+// Automatically switches to 'absolute' if parent has transforms or overflow
+if (self.image.position === 'fixed') {
+  const $parents = getParents(self.$item).filter((el) => {
+    const styles = global.getComputedStyle(el);
+    const parentTransform = styles['-webkit-transform'] || 
+                           styles['-moz-transform'] || 
+                           styles.transform;
+    const overflowRegex = /(auto|scroll)/;
+
+    return (
+      (parentTransform && parentTransform !== 'none') ||
+      overflowRegex.test(styles.overflow + styles['overflow-y'] + 
+                        styles['overflow-x'])
+    );
+  });
+
+  self.image.position = $parents.length ? 'absolute' : 'fixed';
+}
+```
+
+<Info>Jarallax uses `position: fixed` by default for optimal performance on most browsers, including MacOS with smooth scrolling. It automatically switches to `absolute` if parent elements have transforms or scroll overflow.</Info>
+
+### When Position is Absolute
+
+For `opacity`, `scale`, `scale-opacity` types, or when `speed` is `1`, position is automatically set to `absolute`:
+
+```javascript
+// From core.js
+if (
+  self.options.type === 'opacity' ||
+  self.options.type === 'scale' ||
+  self.options.type === 'scale-opacity' ||
+  self.options.speed === 1
+) {
+  self.image.position = 'absolute';
+}
+```
+
+### Custom Viewport Element
+
+Optimize performance by checking visibility against a custom element instead of the window:
+
+```javascript
+const customViewport = document.querySelector('.custom-scroll-container');
+
+jarallax(document.querySelectorAll('.jarallax'), {
+  elementInViewport: customViewport
+});
+```
+
+<Note>This is useful when your parallax elements are inside a scrollable container rather than the main window. See [Issue #13](https://github.com/nk-o/jarallax/issues/13) for details.</Note>
+
+### Video Performance Options
+
+<Steps>
+  <Step title="Enable Lazy Loading">
+    Only load videos when they enter the viewport:
+    
+    ```javascript
+    jarallax(document.querySelectorAll('.jarallax'), {
+      videoSrc: 'https://www.youtube.com/watch?v=ab0TSkLe-E0',
+      videoLazyLoading: true // Default
+    });
+    ```
+  </Step>
+
+  <Step title="Play Only When Visible">
+    Pause videos when they leave the viewport:
+    
+    ```javascript
+    jarallax(document.querySelectorAll('.jarallax'), {
+      videoSrc: 'https://www.youtube.com/watch?v=ab0TSkLe-E0',
+      videoPlayOnlyVisible: true // Default
+    });
+    ```
+  </Step>
+
+  <Step title="Disable on Mobile">
+    Skip video loading on mobile devices:
+    
+    ```javascript
+    jarallax(document.querySelectorAll('.jarallax'), {
+      videoSrc: 'https://www.youtube.com/watch?v=ab0TSkLe-E0',
+      disableVideo: /iPad|iPhone|iPod|Android/
+    });
+    ```
+  </Step>
+</Steps>
+
+## Container Styling
+
+Customize the parallax container appearance:
+
+### Custom Container Class
+
+```javascript
+jarallax(document.querySelectorAll('.jarallax'), {
+  containerClass: 'my-custom-parallax-container'
+});
+```
+
+<Info>The default container class is `jarallax-container`.</Info>
+
+### Z-Index Control
+
+```javascript
+jarallax(document.querySelectorAll('.jarallax'), {
+  zIndex: -100 // Default
+});
+```
+
+For layered effects:
+
+```javascript
+// Background layer
+jarallax(document.querySelectorAll('.bg-layer'), {
+  zIndex: -200
+});
+
+// Middle layer
+jarallax(document.querySelectorAll('.mid-layer'), {
+  zIndex: -100
+});
+```
+
+## Image Options
+
+### Keep Original Image
+
+Prevent Jarallax from moving the original image element:
+
+```javascript
+jarallax(document.querySelectorAll('.jarallax'), {
+  keepImg: true
+});
+```
+
+<Note>When `true`, Jarallax clones the image instead of moving it. This is useful when you need to maintain the original image in the DOM for other purposes.</Note>
+
+### Image Source
+
+Explicitly set the image source:
+
+```javascript
+jarallax(document.querySelectorAll('.jarallax'), {
+  imgSrc: 'path/to/image.jpg'
+});
+```
+
+### Image Element Selector
+
+Customize the selector for finding the image element:
+
+```javascript
+jarallax(document.querySelectorAll('.jarallax'), {
+  imgElement: '.my-custom-image-class'
+});
+```
+
+**Default:** `'.jarallax-img'`
+
+## Complete Advanced Example
+
+Here's a complete example using advanced options:
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Advanced Jarallax</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/jarallax@2/dist/jarallax.min.css" rel="stylesheet">
+    
+    <style>
+      .jarallax {
+        position: relative;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        text-align: center;
+      }
+      
+      .content {
+        position: relative;
+        z-index: 1;
+        max-width: 800px;
+        padding: 2rem;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Scroll type -->
+    <div class="jarallax" id="section1">
+      <img class="jarallax-img" src="image1.jpg" alt="">
+      <div class="content">
+        <h1>Scroll Parallax</h1>
+      </div>
+    </div>
+
+    <!-- Scale type -->
+    <div class="jarallax" id="section2">
+      <img class="jarallax-img" src="image2.jpg" alt="">
+      <div class="content">
+        <h1>Scale Effect</h1>
+      </div>
+    </div>
+
+    <!-- Opacity type -->
+    <div class="jarallax" id="section3">
+      <img class="jarallax-img" src="image3.jpg" alt="">
+      <div class="content">
+        <h1>Opacity Fade</h1>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/jarallax@2/dist/jarallax.min.js"></script>
+    
+    <script>
+      // Different effects for each section
+      jarallax(document.getElementById('section1'), {
+        type: 'scroll',
+        speed: 0.2
+      });
+
+      jarallax(document.getElementById('section2'), {
+        type: 'scale',
+        speed: 0.5
+      });
+
+      jarallax(document.getElementById('section3'), {
+        type: 'opacity',
+        speed: 0.8,
+        disableParallax: function() {
+          return window.innerWidth < 768;
+        }
+      });
+    </script>
+  </body>
+</html>
+```
+
+## Best Practices
+
+<CardGroup cols={2}>
+  <Card title="Mobile Performance" icon="mobile">
+    Use `disableParallax` and `disableVideo` on mobile devices to improve performance and reduce data usage.
+  </Card>
+  
+  <Card title="Speed Selection" icon="gauge">
+    Keep speed between `0.2` and `0.8` for subtle, professional effects. Higher values can be disorienting.
+  </Card>
+  
+  <Card title="Video Optimization" icon="video">
+    Always enable `videoLazyLoading` and `videoPlayOnlyVisible` for pages with multiple video backgrounds.
+  </Card>
+  
+  <Card title="Type Selection" icon="wand-magic-sparkles">
+    Use `scroll` for most cases, `scale` for dramatic reveals, and `opacity` for subtle fades.
+  </Card>
+</CardGroup>
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Events & Methods" icon="code" href="/guides/events-and-methods">
+    Learn how to control Jarallax instances programmatically
+  </Card>
+  
+  <Card title="Basic Usage" icon="book" href="/guides/basic-usage">
+    Review the fundamentals of Jarallax
+  </Card>
+</CardGroup>

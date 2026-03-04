@@ -1,0 +1,612 @@
+---
+title: 'React & Next.js'
+description: 'Integrate Jarallax parallax effects into React and Next.js applications'
+icon: 'react'
+---
+
+Jarallax can be seamlessly integrated into React and Next.js applications using custom wrapper components. This guide shows you how to build reusable components and handle server-side rendering.
+
+## Installation
+
+First, install Jarallax in your React or Next.js project:
+
+```bash
+npm install jarallax
+```
+
+## React Component Setup
+
+Create reusable React components for Jarallax functionality:
+
+<Steps>
+  <Step title="Create the Jarallax Component">
+    Build a wrapper component that manages the parallax lifecycle:
+
+    ```jsx components/Jarallax.js
+    import React, { useRef, useEffect } from 'react';
+    import { jarallax, jarallaxVideo } from 'jarallax';
+    import 'jarallax/dist/jarallax.min.css';
+
+    // Optional video extension
+    jarallaxVideo();
+
+    export default function Jarallax({ className = '', children, ...props }) {
+      const $el = useRef();
+
+      // Init Jarallax
+      useEffect(() => {
+        if ($el.current) {
+          jarallax($el.current, props);
+        }
+
+        // Destroy Jarallax on cleanup
+        return function destroy() {
+          if ($el.current) {
+            jarallax($el.current, 'destroy');
+          }
+        };
+      }, []);
+
+      // Update options when props change
+      useEffect(() => {
+        if ($el.current) {
+          jarallax($el.current, 'destroy');
+          jarallax($el.current, props);
+        }
+      }, [props]);
+
+      return (
+        <div ref={$el} className={`jarallax ${className}`}>
+          {children}
+        </div>
+      );
+    }
+    ```
+
+    <Note>
+      This component properly handles initialization, cleanup, and prop updates to prevent memory leaks.
+    </Note>
+  </Step>
+
+  <Step title="Create the Image Component">
+    Create a simple component for parallax images:
+
+    ```jsx components/JarallaxImage.js
+    export default function JarallaxImage({ className = '', ...props }) {
+      return <img className={`jarallax-img ${className}`} {...props} />;
+    }
+    ```
+  </Step>
+
+  <Step title="Use in Your Application">
+    Import and use the components in your React app:
+
+    ```jsx App.js
+    import Jarallax from './components/Jarallax';
+    import JarallaxImage from './components/JarallaxImage';
+
+    function App() {
+      return (
+        <div>
+          <Jarallax speed={0.2}>
+            <JarallaxImage 
+              src="https://jarallax.nkdev.info/images/image1.jpg" 
+              alt="Parallax background" 
+            />
+            <div className="content">
+              <h1>Your Content Here</h1>
+            </div>
+          </Jarallax>
+        </div>
+      );
+    }
+    ```
+  </Step>
+</Steps>
+
+## Next.js Integration
+
+Next.js requires special handling due to server-side rendering (SSR). Jarallax needs to run only on the client side.
+
+### Basic Next.js Setup
+
+Here's how to integrate Jarallax in a Next.js application:
+
+```jsx pages/index.js
+import Head from 'next/head';
+import dynamic from 'next/dynamic';
+
+// Disable SSR for Jarallax component
+const Jarallax = dynamic(() => import('../components/Jarallax'), { ssr: false });
+import JarallaxImage from '../components/JarallaxImage';
+
+export default function Index() {
+  return (
+    <>
+      <Head>
+        <title>Next.js Parallax Example</title>
+      </Head>
+
+      <div className="section">
+        <h1>Next.js Example</h1>
+      </div>
+
+      <Jarallax speed={0.2}>
+        <JarallaxImage src="https://jarallax.nkdev.info/images/image1.jpg" alt="" />
+      </Jarallax>
+
+      <Jarallax speed={0.2} videoSrc="https://youtu.be/mru3Q5m4lkY" />
+
+      <div className="section" />
+    </>
+  );
+}
+```
+
+<Warning>
+  Always use `dynamic` import with `{ ssr: false }` for the Jarallax component to prevent server-side rendering issues.
+</Warning>
+
+### App Router Setup (Next.js 13+)
+
+For Next.js App Router, mark your component as a Client Component:
+
+```jsx components/Jarallax.js
+'use client';
+
+import React, { useRef, useEffect } from 'react';
+import { jarallax, jarallaxVideo } from 'jarallax';
+import 'jarallax/dist/jarallax.min.css';
+
+jarallaxVideo();
+
+export default function Jarallax({ className = '', children, ...props }) {
+  const $el = useRef();
+
+  useEffect(() => {
+    if ($el.current) {
+      jarallax($el.current, props);
+    }
+
+    return function destroy() {
+      if ($el.current) {
+        jarallax($el.current, 'destroy');
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    if ($el.current) {
+      jarallax($el.current, 'destroy');
+      jarallax($el.current, props);
+    }
+  }, [props]);
+
+  return (
+    <div ref={$el} className={`jarallax ${className}`}>
+      {children}
+    </div>
+  );
+}
+```
+
+## Advanced Next.js Example
+
+Here's a complete example with dynamic state management and interactive controls:
+
+```jsx pages/index.js
+import React, { useState } from 'react';
+import Head from 'next/head';
+import dynamic from 'next/dynamic';
+
+const Jarallax = dynamic(() => import('../components/Jarallax'), { ssr: false });
+import JarallaxImage from '../components/JarallaxImage';
+
+export default function Index() {
+  const [blocks, updateBlocks] = useState([
+    {
+      uid: 1,
+      options: {
+        type: 'scroll',
+        src: 'https://source.unsplash.com/random/1280x720',
+        speed: 0.6,
+      },
+    },
+  ]);
+
+  function addNewBlock() {
+    const randomImage = `https://source.unsplash.com/random/1280x72${blocks.length % 10}`;
+    let uid = 1;
+
+    if (blocks[blocks.length - 1]) {
+      uid = blocks[blocks.length - 1].uid + 1;
+    }
+
+    updateBlocks([
+      ...blocks,
+      {
+        uid: uid,
+        options: {
+          type: 'scroll',
+          src: randomImage,
+          speed: 0.6,
+        },
+      },
+    ]);
+  }
+
+  function removeBlock(id) {
+    updateBlocks(
+      blocks.filter((data, i) => {
+        return id !== i;
+      })
+    );
+  }
+
+  function changeBlockOptions(id, newOptions) {
+    updateBlocks(
+      blocks.map((data, i) => {
+        if (id === i) {
+          return {
+            ...data,
+            options: {
+              ...data.options,
+              ...newOptions,
+            },
+          };
+        }
+
+        return data;
+      })
+    );
+  }
+
+  return (
+    <>
+      <Head>
+        <title>Next.js Advanced Example</title>
+      </Head>
+
+      <div className="section">
+        <h1>Next.js Advanced Example</h1>
+      </div>
+
+      <div className="wrapper">
+        <button className="btn btn-primary" onClick={addNewBlock}>
+          + Add New Parallaxed Block
+        </button>
+
+        <br />
+        <br />
+
+        {blocks.map(({ uid, options }, i) => (
+          <div className="jarallax-wrap" key={uid}>
+            <Jarallax type={options.type} speed={options.speed}>
+              <JarallaxImage src={options.src} alt="" />
+            </Jarallax>
+            <div className="jarallax-controls">
+              <div className="form-group">
+                <label>Parallax Type</label>
+                <select
+                  className="form-control"
+                  value={options.type}
+                  onChange={(e) => {
+                    changeBlockOptions(i, {
+                      type: e.target.value,
+                    });
+                  }}
+                >
+                  <option value="scroll">Scroll</option>
+                  <option value="scale">Scale</option>
+                  <option value="opacity">Opacity</option>
+                  <option value="scroll-opacity">Scroll Opacity</option>
+                  <option value="scale-opacity">Scale Opacity</option>
+                </select>
+                <label>Parallax Speed</label>
+                <input
+                  className="form-control"
+                  type="number"
+                  min="-1"
+                  max="2"
+                  step="0.1"
+                  value={options.speed}
+                  onChange={(e) => {
+                    changeBlockOptions(i, {
+                      speed: e.target.value,
+                    });
+                  }}
+                />
+                <button
+                  className="btn btn-remove"
+                  onClick={() => {
+                    removeBlock(i);
+                  }}
+                >
+                  Remove Block
+                </button>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </>
+  );
+}
+```
+
+<Tip>
+  This advanced example demonstrates how to dynamically add, remove, and update parallax blocks with different configurations in real-time.
+</Tip>
+
+## Common Props
+
+The Jarallax component accepts all standard Jarallax options as props:
+
+```jsx
+<Jarallax
+  // Parallax type
+  type="scroll"  // scroll, scale, opacity, scroll-opacity, scale-opacity
+  
+  // Parallax speed
+  speed={0.5}  // -1.0 to 2.0
+  
+  // Image options
+  imgSrc="path/to/image.jpg"
+  imgSize="cover"
+  imgPosition="50% 50%"
+  
+  // Video options
+  videoSrc="https://www.youtube.com/watch?v=ab0TSkLe-E0"
+  videoStartTime={0}
+  videoEndTime={0}
+  videoLoop={true}
+  
+  // z-index
+  zIndex={-100}
+  
+  // Disable on mobile
+  disableParallax={/iPad|iPhone|iPod|Android/}
+  
+  // Event handlers
+  onInit={() => console.log('Initialized')}
+  onDestroy={() => console.log('Destroyed')}
+  onScroll={(calculations) => console.log(calculations)}
+>
+  <JarallaxImage src="path/to/image.jpg" alt="" />
+  {/* Your content */}
+</Jarallax>
+```
+
+## Video Backgrounds in React
+
+Enable video backgrounds by ensuring the video extension is initialized:
+
+<CodeGroup>
+```jsx YouTube Video
+<Jarallax 
+  speed={0.2} 
+  videoSrc="https://www.youtube.com/watch?v=ab0TSkLe-E0"
+  videoLoop={true}
+>
+  <div className="content">
+    <h2>Content over video</h2>
+  </div>
+</Jarallax>
+```
+
+```jsx Vimeo Video
+<Jarallax 
+  speed={0.2} 
+  videoSrc="https://vimeo.com/110138539"
+  videoStartTime={10}
+  videoEndTime={30}
+>
+  <div className="content">
+    <h2>Content over video</h2>
+  </div>
+</Jarallax>
+```
+
+```jsx Self-Hosted Video
+<Jarallax 
+  speed={0.2} 
+  videoSrc="mp4:./video/local.mp4,webm:./video/local.webm"
+>
+  <div className="content">
+    <h2>Content over video</h2>
+  </div>
+</Jarallax>
+```
+</CodeGroup>
+
+## Styling
+
+Add CSS to control the appearance and layout:
+
+```css styles/globals.css
+/* Set parallax container height */
+.jarallax {
+  height: 80vh;
+  position: relative;
+}
+
+/* Style content inside parallax */
+.jarallax .content {
+  position: relative;
+  z-index: 1;
+  padding: 2rem;
+  color: white;
+  text-align: center;
+}
+
+/* Section spacing */
+.section {
+  height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+```
+
+## TypeScript Support
+
+Jarallax includes TypeScript definitions. Create typed components:
+
+```tsx components/Jarallax.tsx
+import React, { useRef, useEffect, ReactNode } from 'react';
+import { jarallax, jarallaxVideo, JarallaxOptions } from 'jarallax';
+import 'jarallax/dist/jarallax.min.css';
+
+jarallaxVideo();
+
+interface JarallaxProps extends JarallaxOptions {
+  className?: string;
+  children?: ReactNode;
+}
+
+export default function Jarallax({ 
+  className = '', 
+  children, 
+  ...props 
+}: JarallaxProps) {
+  const $el = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if ($el.current) {
+      jarallax($el.current, props);
+    }
+
+    return function destroy() {
+      if ($el.current) {
+        jarallax($el.current, 'destroy');
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    if ($el.current) {
+      jarallax($el.current, 'destroy');
+      jarallax($el.current, props);
+    }
+  }, [props]);
+
+  return (
+    <div ref={$el} className={`jarallax ${className}`}>
+      {children}
+    </div>
+  );
+}
+```
+
+## Performance Optimization
+
+<Tabs>
+  <Tab title="Lazy Loading">
+    Lazy load parallax components for better initial page load:
+
+    ```jsx
+    import dynamic from 'next/dynamic';
+
+    const Jarallax = dynamic(() => import('../components/Jarallax'), {
+      ssr: false,
+      loading: () => <div className="loading-placeholder" />
+    });
+    ```
+  </Tab>
+
+  <Tab title="Conditional Rendering">
+    Disable parallax on mobile devices to improve performance:
+
+    ```jsx
+    import { useState, useEffect } from 'react';
+
+    export default function MyPage() {
+      const [isMobile, setIsMobile] = useState(false);
+
+      useEffect(() => {
+        setIsMobile(/iPad|iPhone|iPod|Android/.test(navigator.userAgent));
+      }, []);
+
+      return (
+        <Jarallax 
+          speed={0.2}
+          disableParallax={isMobile}
+        >
+          <JarallaxImage src="image.jpg" alt="" />
+        </Jarallax>
+      );
+    }
+    ```
+  </Tab>
+
+  <Tab title="Memoization">
+    Use React.memo to prevent unnecessary re-renders:
+
+    ```jsx
+    import React, { memo } from 'react';
+
+    const Jarallax = memo(function Jarallax({ className, children, ...props }) {
+      // Component implementation
+    });
+
+    export default Jarallax;
+    ```
+  </Tab>
+</Tabs>
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Parallax not working in Next.js">
+    Ensure you're using `dynamic` import with `{ ssr: false }` for the Jarallax component. The library requires browser APIs that aren't available during server-side rendering.
+
+    ```jsx
+    const Jarallax = dynamic(() => import('../components/Jarallax'), { ssr: false });
+    ```
+  </Accordion>
+
+  <Accordion title="Props not updating">
+    Make sure you're properly handling prop changes in the `useEffect` hook. The component should destroy and reinitialize Jarallax when props change:
+
+    ```jsx
+    useEffect(() => {
+      if ($el.current) {
+        jarallax($el.current, 'destroy');
+        jarallax($el.current, props);
+      }
+    }, [props]);
+    ```
+  </Accordion>
+
+  <Accordion title="Memory leaks">
+    Always clean up Jarallax instances in the useEffect cleanup function:
+
+    ```jsx
+    useEffect(() => {
+      // Initialize
+      return function destroy() {
+        if ($el.current) {
+          jarallax($el.current, 'destroy');
+        }
+      };
+    }, []);
+    ```
+  </Accordion>
+</AccordionGroup>
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Vanilla JavaScript" icon="js" href="/examples/vanilla-javascript">
+    Learn basic Jarallax usage without frameworks
+  </Card>
+  <Card title="jQuery Integration" icon="j" href="/examples/jquery">
+    Use Jarallax with jQuery
+  </Card>
+  <Card title="API Reference" icon="code" href="/api/methods">
+    Explore all available methods and options
+  </Card>
+  <Card title="Configuration" icon="sliders" href="/api/options">
+    Advanced configuration options
+  </Card>
+</CardGroup>

@@ -1,0 +1,389 @@
+---
+title: 'Vanilla JavaScript'
+description: 'Learn how to use Jarallax with vanilla JavaScript in various module formats'
+icon: 'js'
+---
+
+Jarallax provides multiple ways to initialize parallax effects using vanilla JavaScript, supporting both modern ESM imports and traditional UMD script tags.
+
+## Installation
+
+Install Jarallax via npm:
+
+```bash
+npm install jarallax
+```
+
+Or use a CDN for quick prototyping:
+
+```html
+<!-- Jarallax CSS -->
+<link href="https://cdn.jsdelivr.net/npm/jarallax@2/dist/jarallax.min.css" rel="stylesheet">
+```
+
+## Initialization Methods
+
+Jarallax supports three initialization patterns in vanilla JavaScript:
+
+<Tabs>
+  <Tab title="ESM Import">
+    Use ES Modules for modern JavaScript applications with bundlers or native browser support.
+
+    ```javascript
+    import { jarallax, jarallaxVideo } from 'jarallax';
+    import 'jarallax/dist/jarallax.min.css';
+
+    // Optional: Enable video extension
+    jarallaxVideo();
+
+    // Initialize parallax
+    jarallax(document.querySelectorAll('.jarallax'), {
+      speed: 0.2
+    });
+    ```
+
+    <Info>
+      The video extension is optional and only needed if you want to use YouTube, Vimeo, or self-hosted video backgrounds.
+    </Info>
+  </Tab>
+
+  <Tab title="UMD Script">
+    Use traditional script tags for simple HTML pages without a build process.
+
+    ```html
+    <!-- Jarallax CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/jarallax@2/dist/jarallax.min.css" rel="stylesheet">
+
+    <!-- Jarallax JS -->
+    <script src="https://cdn.jsdelivr.net/npm/jarallax@2/dist/jarallax.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jarallax@2/dist/jarallax-video.min.js"></script>
+
+    <!-- Initialize -->
+    <script>
+      jarallax(document.querySelectorAll('.jarallax'), {
+        speed: 0.2
+      });
+    </script>
+    ```
+  </Tab>
+
+  <Tab title="Data Attributes">
+    Use data attributes for automatic initialization without JavaScript code.
+
+    ```html
+    <!-- Jarallax CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/jarallax@2/dist/jarallax.min.css" rel="stylesheet">
+
+    <!-- Jarallax JS -->
+    <script src="https://cdn.jsdelivr.net/npm/jarallax@2/dist/jarallax.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jarallax@2/dist/jarallax-video.min.js"></script>
+
+    <!-- HTML with data attributes -->
+    <div data-jarallax data-speed="0.2" class="jarallax">
+      <img class="jarallax-img" src="https://jarallax.nkdev.info/images/image1.jpg" alt="">
+    </div>
+    ```
+
+    <Note>
+      Data attribute initialization only works with the UMD build. All options can be set as data attributes using the `data-` prefix.
+    </Note>
+  </Tab>
+</Tabs>
+
+## Complete Examples
+
+### ESM with CDN
+
+Here's a complete working example using ES Modules from a CDN:
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Jarallax ESM Example</title>
+    
+    <!-- Jarallax CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/jarallax@2/dist/jarallax.min.css" rel="stylesheet">
+    
+    <style>
+      .jarallax {
+        height: 80vh;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="jarallax">
+      <img class="jarallax-img" src="https://jarallax.nkdev.info/images/image1.jpg" alt="">
+    </div>
+
+    <div class="jarallax" data-video-src="https://youtu.be/mru3Q5m4lkY"></div>
+
+    <!-- Init Jarallax -->
+    <script type="module">
+      import { jarallax, jarallaxVideo } from "https://cdn.jsdelivr.net/npm/jarallax@2/+esm";
+
+      // Optional video extension
+      jarallaxVideo();
+
+      jarallax(document.querySelectorAll(".jarallax"));
+    </script>
+  </body>
+</html>
+```
+
+### UMD with Script Tags
+
+This example uses traditional script tags for maximum browser compatibility:
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Jarallax JavaScript Example</title>
+    
+    <!-- Jarallax CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/jarallax@2/dist/jarallax.min.css" rel="stylesheet">
+    
+    <style>
+      .jarallax {
+        height: 80vh;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="jarallax">
+      <img class="jarallax-img" src="https://jarallax.nkdev.info/images/image1.jpg" alt="">
+    </div>
+
+    <div class="jarallax" data-video-src="https://youtu.be/mru3Q5m4lkY"></div>
+
+    <!-- Jarallax JS -->
+    <script src="https://cdn.jsdelivr.net/npm/jarallax@2/dist/jarallax.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jarallax@2/dist/jarallax-video.min.js"></script>
+
+    <!-- Init Jarallax -->
+    <script>
+      jarallax(document.querySelectorAll(".jarallax"));
+    </script>
+  </body>
+</html>
+```
+
+### Data Attribute Initialization
+
+Use data attributes for zero-JavaScript initialization:
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Jarallax HTML Example</title>
+    
+    <!-- Jarallax CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/jarallax@2/dist/jarallax.min.css" rel="stylesheet">
+    
+    <style>
+      .jarallax {
+        height: 80vh;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Image parallax with data-jarallax attribute -->
+    <div class="jarallax" data-jarallax>
+      <img class="jarallax-img" src="https://jarallax.nkdev.info/images/image1.jpg" alt="">
+    </div>
+
+    <!-- Video parallax with data-jarallax attribute -->
+    <div class="jarallax" data-jarallax data-video-src="https://youtu.be/mru3Q5m4lkY"></div>
+
+    <!-- Jarallax JS (automatically initializes data-jarallax elements) -->
+    <script src="https://cdn.jsdelivr.net/npm/jarallax@2/dist/jarallax.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jarallax@2/dist/jarallax-video.min.js"></script>
+  </body>
+</html>
+```
+
+## HTML Structure
+
+Jarallax requires specific HTML structure for the parallax effect to work:
+
+<CodeGroup>
+```html Image Tag (Recommended)
+<div class="jarallax">
+  <img class="jarallax-img" src="path/to/image.jpg" alt="">
+  <!-- Your content here -->
+</div>
+```
+
+```html Picture Tag (Responsive)
+<div class="jarallax">
+  <picture class="jarallax-img">
+    <source media="(max-width: 768px)" srcset="path/to/mobile-image.jpg">
+    <img src="path/to/image.jpg" alt="">
+  </picture>
+  <!-- Your content here -->
+</div>
+```
+
+```html Inline Background
+<div class="jarallax" style="background-image: url('path/to/image.jpg');">
+  <!-- Your content here -->
+</div>
+```
+</CodeGroup>
+
+<Tip>
+  Using the `<img>` tag with the `jarallax-img` class is recommended for better SEO and accessibility.
+</Tip>
+
+## Configuration Options
+
+Customize the parallax effect with these options:
+
+```javascript
+jarallax(document.querySelectorAll('.jarallax'), {
+  // Parallax type: scroll, scale, opacity, scroll-opacity, scale-opacity
+  type: 'scroll',
+  
+  // Parallax speed (-1.0 to 2.0)
+  speed: 0.5,
+  
+  // Image source (overrides background)
+  imgSrc: 'path/to/image.jpg',
+  
+  // Image size (CSS background-size or object-fit)
+  imgSize: 'cover',
+  
+  // Image position (CSS background-position or object-position)
+  imgPosition: '50% 50%',
+  
+  // z-index of parallax container
+  zIndex: -100,
+  
+  // Disable on specific devices
+  disableParallax: /iPad|iPhone|iPod|Android/,
+  
+  // Video options (requires jarallax-video extension)
+  videoSrc: 'https://www.youtube.com/watch?v=ab0TSkLe-E0',
+  videoStartTime: 0,
+  videoEndTime: 0,
+  videoLoop: true
+});
+```
+
+## Methods
+
+Control parallax instances programmatically:
+
+```javascript
+// Destroy parallax
+jarallax(document.querySelectorAll('.jarallax'), 'destroy');
+
+// Check if element is visible
+jarallax(document.querySelectorAll('.jarallax'), 'isVisible');
+
+// Recalculate on resize
+jarallax(document.querySelectorAll('.jarallax'), 'onResize');
+
+// Recalculate on scroll
+jarallax(document.querySelectorAll('.jarallax'), 'onScroll');
+```
+
+## Events
+
+Listen to parallax events for custom behaviors:
+
+```javascript
+jarallax(document.querySelectorAll('.jarallax'), {
+  onScroll: function(calculations) {
+    console.log('Scroll calculations:', calculations);
+  },
+  onInit: function() {
+    console.log('Parallax initialized');
+  },
+  onDestroy: function() {
+    console.log('Parallax destroyed');
+  },
+  onCoverImage: function() {
+    console.log('Image covered');
+  }
+});
+```
+
+## Video Backgrounds
+
+Jarallax supports YouTube, Vimeo, and self-hosted video backgrounds:
+
+<CodeGroup>
+```javascript JavaScript Initialization
+import { jarallax, jarallaxVideo } from 'jarallax';
+
+// Enable video extension
+jarallaxVideo();
+
+jarallax(document.querySelectorAll('.jarallax'), {
+  speed: 0.2,
+  videoSrc: 'https://www.youtube.com/watch?v=ab0TSkLe-E0'
+});
+```
+
+```html Data Attribute (YouTube)
+<div class="jarallax" data-jarallax data-video-src="https://www.youtube.com/watch?v=ab0TSkLe-E0">
+  Your content here...
+</div>
+```
+
+```html Data Attribute (Vimeo)
+<div class="jarallax" data-jarallax data-video-src="https://vimeo.com/110138539">
+  Your content here...
+</div>
+```
+
+```html Data Attribute (Self-Hosted)
+<div class="jarallax" data-jarallax data-video-src="mp4:./video/local-video.mp4,webm:./video/local-video.webm">
+  Your content here...
+</div>
+```
+</CodeGroup>
+
+<Warning>
+  Self-hosted videos should include at least one format (mp4, webm, or ogv) for browser compatibility.
+</Warning>
+
+## Browser Support
+
+Jarallax works in all modern browsers:
+
+- Chrome (latest)
+- Firefox (latest)
+- Safari (latest)
+- Edge (latest)
+- Opera (latest)
+
+<Info>
+  For older browsers, the UMD build provides the best compatibility. ESM requires browsers with native ES6 module support.
+</Info>
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="React & Next.js" icon="react" href="/examples/react-nextjs">
+    Learn how to integrate Jarallax with React and Next.js applications
+  </Card>
+  <Card title="jQuery Integration" icon="j" href="/examples/jquery">
+    Use Jarallax with jQuery for enhanced compatibility
+  </Card>
+  <Card title="API Reference" icon="code" href="/api/methods">
+    Explore all available methods and options
+  </Card>
+  <Card title="Advanced Usage" icon="wand-magic-sparkles" href="/guides/advanced-options">
+    Discover advanced configuration and customization options
+  </Card>
+</CardGroup>

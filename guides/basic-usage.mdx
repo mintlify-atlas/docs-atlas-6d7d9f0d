@@ -1,0 +1,348 @@
+---
+title: Basic Usage
+description: Learn how to implement basic parallax effects with Jarallax using images and backgrounds
+---
+
+Jarallax provides multiple ways to create parallax scrolling effects. This guide covers the fundamentals of setting up image parallax effects.
+
+## Installation
+
+First, install Jarallax in your project:
+
+<CodeGroup>
+```bash npm
+npm install jarallax
+```
+
+```bash yarn
+yarn add jarallax
+```
+
+```bash pnpm
+pnpm add jarallax
+```
+</CodeGroup>
+
+## Import Methods
+
+Choose the import method that best fits your project setup.
+
+<Tabs>
+  <Tab title="ES Modules (Bundlers)">
+    ```javascript
+    import { jarallax } from 'jarallax';
+    import 'jarallax/dist/jarallax.min.css';
+
+    // Initialize on your elements
+    jarallax(document.querySelectorAll('.jarallax'), {
+      speed: 0.2
+    });
+    ```
+  </Tab>
+
+  <Tab title="ESM CDN">
+    ```html
+    <!-- Jarallax CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/jarallax@2/dist/jarallax.min.css" rel="stylesheet">
+
+    <!-- Jarallax JS -->
+    <script type="module">
+      import { jarallax } from "https://cdn.jsdelivr.net/npm/jarallax@2/+esm";
+      
+      jarallax(document.querySelectorAll('.jarallax'), {
+        speed: 0.2
+      });
+    </script>
+    ```
+  </Tab>
+
+  <Tab title="UMD (Browser)">
+    ```html
+    <!-- Jarallax CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/jarallax@2/dist/jarallax.min.css" rel="stylesheet">
+
+    <!-- Jarallax JS -->
+    <script src="https://cdn.jsdelivr.net/npm/jarallax@2/dist/jarallax.min.js"></script>
+    
+    <script>
+      jarallax(document.querySelectorAll('.jarallax'), {
+        speed: 0.2
+      });
+    </script>
+    ```
+  </Tab>
+
+  <Tab title="jQuery">
+    ```html
+    <!-- Jarallax CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/jarallax@2/dist/jarallax.min.css" rel="stylesheet">
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    <!-- Jarallax JS -->
+    <script src="https://cdn.jsdelivr.net/npm/jarallax@2/dist/jarallax.min.js"></script>
+    
+    <script>
+      $('.jarallax').jarallax({
+        speed: 0.2
+      });
+    </script>
+    ```
+  </Tab>
+</Tabs>
+
+## Using the jarallax-img Class
+
+The most flexible way to add parallax images is using the `jarallax-img` class on an `<img>` element.
+
+<Steps>
+  <Step title="Add HTML Structure">
+    Create a container with the `jarallax` class and an image with the `jarallax-img` class:
+
+    ```html
+    <div class="jarallax">
+      <img class="jarallax-img" src="path/to/image.jpg" alt="">
+      Your content here...
+    </div>
+    ```
+
+    <Info>The `jarallax-img` class is the default selector (defined in `imgElement` option). You can customize this selector if needed.</Info>
+  </Step>
+
+  <Step title="Initialize Jarallax">
+    Initialize Jarallax on your elements:
+
+    ```javascript
+    jarallax(document.querySelectorAll('.jarallax'), {
+      speed: 0.5
+    });
+    ```
+  </Step>
+
+  <Step title="Add Custom Styles">
+    Style your parallax container as needed:
+
+    ```css
+    .jarallax {
+      position: relative;
+      min-height: 500px;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    ```
+  </Step>
+</Steps>
+
+<Tip>Using `<img>` tags with the `jarallax-img` class allows better SEO and accessibility compared to CSS background images.</Tip>
+
+## Using Picture Elements
+
+For responsive images with different sources, use the `<picture>` element:
+
+```html
+<div class="jarallax">
+  <picture class="jarallax-img">
+    <source media="(max-width: 768px)" srcset="path/to/mobile-image.jpg">
+    <source media="(max-width: 1200px)" srcset="path/to/tablet-image.jpg">
+    <img src="path/to/desktop-image.jpg" alt="">
+  </picture>
+  Your content here...
+</div>
+```
+
+## Background Image Method
+
+You can also use CSS background images for simpler setups:
+
+<Tabs>
+  <Tab title="Inline Style">
+    ```html
+    <div class="jarallax" style="background-image: url('path/to/image.jpg');">
+      Your content here...
+    </div>
+    ```
+    
+    ```javascript
+    jarallax(document.querySelectorAll('.jarallax'));
+    ```
+  </Tab>
+
+  <Tab title="imgSrc Option">
+    ```html
+    <div class="jarallax">
+      Your content here...
+    </div>
+    ```
+    
+    ```javascript
+    jarallax(document.querySelectorAll('.jarallax'), {
+      imgSrc: 'path/to/image.jpg'
+    });
+    ```
+  </Tab>
+</Tabs>
+
+<Warning>When using CSS background images, the image won't be visible to screen readers or search engines. Use the `jarallax-img` class method for better accessibility.</Warning>
+
+## Data Attribute Initialization
+
+In UMD mode, Jarallax supports automatic initialization via data attributes:
+
+```html
+<div class="jarallax" data-jarallax data-speed="0.2">
+  <img class="jarallax-img" src="path/to/image.jpg" alt="">
+  Your content here...
+</div>
+```
+
+<Info>The `data-jarallax` attribute triggers automatic initialization. All options can be set as data attributes using the `data-` prefix (e.g., `data-speed`, `data-img-src`, `data-type`).</Info>
+
+## Common Configuration Options
+
+<Accordion title="speed">
+  Controls the parallax effect speed. Accepts values from `-1.0` to `2.0`.
+  
+  - `0.5` (default): Standard parallax effect
+  - `1.0`: No parallax (moves with scroll)
+  - `0`: Background is fixed
+  - Negative values: Parallax in reverse direction
+
+  ```javascript
+  jarallax(document.querySelectorAll('.jarallax'), {
+    speed: 0.2 // Slower parallax effect
+  });
+  ```
+</Accordion>
+
+<Accordion title="imgPosition">
+  Sets the image position using CSS background-position or object-position values.
+
+  ```javascript
+  jarallax(document.querySelectorAll('.jarallax'), {
+    imgPosition: '50% 50%' // Default: center
+  });
+  ```
+
+  Examples: `'top center'`, `'20% 80%'`, `'left bottom'`
+</Accordion>
+
+<Accordion title="imgSize">
+  Sets the image size using CSS background-size or object-fit values.
+
+  ```javascript
+  jarallax(document.querySelectorAll('.jarallax'), {
+    imgSize: 'cover' // Default
+  });
+  ```
+
+  Options: `'cover'`, `'contain'`, `'auto'`, `'100% 100%'`
+</Accordion>
+
+<Accordion title="imgRepeat">
+  Controls image repetition (for background images only).
+
+  ```javascript
+  jarallax(document.querySelectorAll('.jarallax'), {
+    imgRepeat: 'no-repeat' // Default
+  });
+  ```
+
+  Options: `'no-repeat'`, `'repeat'`, `'repeat-x'`, `'repeat-y'`
+</Accordion>
+
+<Accordion title="keepImg">
+  Keep the `<img>` tag in its default place after initialization.
+
+  ```javascript
+  jarallax(document.querySelectorAll('.jarallax'), {
+    keepImg: false // Default: false
+  });
+  ```
+
+  When `true`, Jarallax clones the image instead of moving it.
+</Accordion>
+
+<Accordion title="zIndex">
+  Sets the z-index of the parallax container.
+
+  ```javascript
+  jarallax(document.querySelectorAll('.jarallax'), {
+    zIndex: -100 // Default
+  });
+  ```
+</Accordion>
+
+## Complete Example
+
+Here's a complete working example:
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Jarallax Example</title>
+    
+    <!-- Jarallax CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/jarallax@2/dist/jarallax.min.css" rel="stylesheet">
+    
+    <style>
+      .jarallax {
+        position: relative;
+        min-height: 600px;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 3rem;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="jarallax">
+      <img class="jarallax-img" src="https://jarallax.nkdev.info/images/image1.jpg" alt="">
+      <h1>Parallax Effect</h1>
+    </div>
+
+    <!-- Jarallax JS -->
+    <script src="https://cdn.jsdelivr.net/npm/jarallax@2/dist/jarallax.min.js"></script>
+    
+    <script>
+      jarallax(document.querySelectorAll('.jarallax'), {
+        speed: 0.2
+      });
+    </script>
+  </body>
+</html>
+```
+
+## jQuery No Conflict
+
+If you're using jQuery and need to prevent namespace collisions:
+
+```javascript
+const jarallaxPlugin = $.fn.jarallax.noConflict();
+$.fn.newJarallax = jarallaxPlugin;
+
+// Now use with the new name
+$('.jarallax').newJarallax({
+  speed: 0.2
+});
+```
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Video Backgrounds" icon="video" href="/guides/video-backgrounds">
+    Learn how to use YouTube, Vimeo, and self-hosted videos
+  </Card>
+  
+  <Card title="Advanced Options" icon="sliders" href="/guides/advanced-options">
+    Explore different parallax types and mobile optimization
+  </Card>
+</CardGroup>

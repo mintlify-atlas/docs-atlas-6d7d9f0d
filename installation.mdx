@@ -1,0 +1,232 @@
+---
+title: Installation
+description: Install Jarallax using npm, yarn, pnpm, or CDN for instant parallax scrolling effects
+---
+
+# Installation
+
+Jarallax can be installed and used in multiple ways depending on your project setup. Choose the method that best fits your workflow.
+
+## Package Manager Installation
+
+Install Jarallax as a Node.js module using your preferred package manager:
+
+<CodeGroup>
+```bash npm
+npm install jarallax
+```
+
+```bash yarn
+yarn add jarallax
+```
+
+```bash pnpm
+pnpm add jarallax
+```
+</CodeGroup>
+
+<Note>
+  The package includes TypeScript definitions, so no additional `@types` package is needed.
+</Note>
+
+## Import Methods
+
+Once installed, you can import Jarallax using different module systems depending on your bundler and project setup.
+
+### ES Modules (Recommended)
+
+For modern bundlers like Webpack, Rollup, or Vite:
+
+```javascript
+import { jarallax, jarallaxVideo } from 'jarallax';
+import 'jarallax/dist/jarallax.min.css';
+
+// Optional: Initialize video extension
+jarallaxVideo();
+
+// Use jarallax
+jarallax(document.querySelectorAll('.jarallax'), {
+  speed: 0.2,
+});
+```
+
+<Info>
+  The video extension (`jarallaxVideo`) is optional and only needed if you plan to use YouTube, Vimeo, or self-hosted video backgrounds.
+</Info>
+
+### TypeScript
+
+Jarallax includes full TypeScript definitions:
+
+```typescript
+import { jarallax, jarallaxVideo, JarallaxOptions } from 'jarallax';
+import 'jarallax/dist/jarallax.min.css';
+
+jarallaxVideo();
+
+const options: JarallaxOptions = {
+  type: 'scroll',
+  speed: 0.5,
+  imgPosition: '50% 50%',
+};
+
+jarallax(document.querySelectorAll('.jarallax'), options);
+```
+
+## CDN Installation
+
+For quick prototyping or projects without a build step, use a CDN.
+
+### ESM via CDN
+
+Use ES modules directly in the browser:
+
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- Jarallax CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/jarallax@2/dist/jarallax.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <!-- Your parallax elements -->
+    <div class="jarallax">
+      <img class="jarallax-img" src="image.jpg" alt="" />
+    </div>
+
+    <!-- Jarallax JS -->
+    <script type="module">
+      import { jarallax, jarallaxVideo } from "https://cdn.jsdelivr.net/npm/jarallax@2/+esm";
+
+      // Optional video extension
+      jarallaxVideo();
+
+      // Initialize
+      jarallax(document.querySelectorAll(".jarallax"));
+    </script>
+  </body>
+</html>
+```
+
+### UMD via CDN
+
+For traditional script tag usage with global variables:
+
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- Jarallax CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/jarallax@2/dist/jarallax.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <!-- Your parallax elements -->
+    <div class="jarallax">
+      <img class="jarallax-img" src="image.jpg" alt="" />
+    </div>
+
+    <!-- Jarallax JS -->
+    <script src="https://cdn.jsdelivr.net/npm/jarallax@2/dist/jarallax.min.js"></script>
+
+    <!-- Optional: Video extension -->
+    <script src="https://cdn.jsdelivr.net/npm/jarallax@2/dist/jarallax-video.min.js"></script>
+
+    <!-- Initialize -->
+    <script>
+      jarallax(document.querySelectorAll(".jarallax"));
+    </script>
+  </body>
+</html>
+```
+
+<Warning>
+  When using UMD, `jarallax` is available as a global variable. Make sure to include the script before trying to use it.
+</Warning>
+
+## jQuery Support (Optional)
+
+If you're using jQuery, Jarallax automatically adds a jQuery plugin interface when loaded in UMD mode:
+
+```html
+<!-- jQuery (required for jQuery API) -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<!-- Jarallax -->
+<script src="https://cdn.jsdelivr.net/npm/jarallax@2/dist/jarallax.min.js"></script>
+
+<script>
+  // Use jQuery syntax
+  $('.jarallax').jarallax({
+    speed: 0.2,
+  });
+</script>
+```
+
+<Note>
+  jQuery is **not required** for Jarallax to work. The vanilla JavaScript API is recommended for modern projects.
+</Note>
+
+## Local Installation
+
+You can also download and host Jarallax files locally:
+
+<Steps>
+  <Step title="Download the package">
+    Download from [npm](https://www.npmjs.com/package/jarallax) or [GitHub releases](https://github.com/nk-o/jarallax/releases)
+  </Step>
+  
+  <Step title="Copy distribution files">
+    Copy files from the `dist/` directory to your project:
+    - `jarallax.min.js` or `jarallax.esm.min.js`
+    - `jarallax.min.css`
+    - `jarallax-video.min.js` (optional, for video backgrounds)
+  </Step>
+  
+  <Step title="Reference in your HTML">
+    ```html
+    <link href="path/to/jarallax.min.css" rel="stylesheet" />
+    <script src="path/to/jarallax.min.js"></script>
+    ```
+  </Step>
+</Steps>
+
+## Verify Installation
+
+To verify Jarallax is installed correctly, check the version:
+
+<CodeGroup>
+```javascript ES Module
+import { jarallax } from 'jarallax';
+console.log('Jarallax loaded:', typeof jarallax === 'function');
+```
+
+```javascript UMD
+console.log('Jarallax loaded:', typeof window.jarallax === 'function');
+```
+
+```javascript jQuery
+console.log('jQuery plugin loaded:', typeof $.fn.jarallax === 'function');
+```
+</CodeGroup>
+
+## What's Included
+
+The package includes:
+
+- **Core library**: Parallax functionality for images
+- **Video extension**: Support for YouTube, Vimeo, and local videos
+- **CSS styles**: Required styles for proper positioning
+- **TypeScript definitions**: Full type support
+- **Source maps**: For debugging
+
+## Next Steps
+
+<Card title="Quick Start Guide" icon="rocket" href="/quickstart">
+  Learn how to create your first parallax effect with Jarallax
+</Card>

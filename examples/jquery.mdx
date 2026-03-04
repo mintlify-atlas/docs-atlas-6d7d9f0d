@@ -1,0 +1,621 @@
+---
+title: 'jQuery Integration'
+description: 'Use Jarallax parallax effects with jQuery for enhanced compatibility and ease of use'
+icon: 'j'
+---
+
+Jarallax provides seamless jQuery integration, allowing you to use familiar jQuery syntax for initializing and controlling parallax effects. This integration is perfect for projects already using jQuery or requiring legacy browser support.
+
+## Installation
+
+Jarallax's jQuery plugin is included in the UMD build. Include jQuery before Jarallax:
+
+```html
+<!-- jQuery -->
+<script src="https://cdn.jsdelivr.net/npm/jquery"></script>
+
+<!-- Jarallax CSS -->
+<link href="https://cdn.jsdelivr.net/npm/jarallax@2/dist/jarallax.min.css" rel="stylesheet">
+
+<!-- Jarallax JS -->
+<script src="https://cdn.jsdelivr.net/npm/jarallax@2/dist/jarallax.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jarallax@2/dist/jarallax-video.min.js"></script>
+```
+
+<Info>
+  jQuery integration is only available with the UMD build. ESM builds do not include jQuery support.
+</Info>
+
+## Basic Usage
+
+Initialize Jarallax using jQuery selectors:
+
+```javascript
+$('.jarallax').jarallax();
+```
+
+With custom options:
+
+```javascript
+$('.jarallax').jarallax({
+  speed: 0.2,
+  type: 'scroll'
+});
+```
+
+## Complete Example
+
+Here's a full working example with jQuery:
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Jarallax jQuery Example</title>
+
+    <!-- Jarallax CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/jarallax@2/dist/jarallax.min.css" rel="stylesheet">
+
+    <style>
+      .section {
+        height: 60vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .jarallax {
+        height: 80vh;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="section">
+      <h1>jQuery Example</h1>
+    </div>
+
+    <!-- Image Parallax -->
+    <div class="jarallax">
+      <img class="jarallax-img" src="https://jarallax.nkdev.info/images/image1.jpg" alt="">
+    </div>
+
+    <!-- Video Parallax -->
+    <div class="jarallax" data-video-src="https://youtu.be/mru3Q5m4lkY"></div>
+
+    <div class="section"></div>
+
+    <!-- jQuery -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery"></script>
+
+    <!-- Jarallax JS -->
+    <script src="https://cdn.jsdelivr.net/npm/jarallax@2/dist/jarallax.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jarallax@2/dist/jarallax-video.min.js"></script>
+
+    <!-- Initialize Jarallax -->
+    <script>
+      $('.jarallax').jarallax();
+    </script>
+  </body>
+</html>
+```
+
+## jQuery Selectors
+
+Use jQuery's powerful selectors to target specific elements:
+
+<CodeGroup>
+```javascript Class Selector
+// Initialize all elements with .jarallax class
+$('.jarallax').jarallax({
+  speed: 0.5
+});
+```
+
+```javascript ID Selector
+// Initialize specific element by ID
+$('#hero-parallax').jarallax({
+  speed: 0.3,
+  type: 'scale'
+});
+```
+
+```javascript Attribute Selector
+// Initialize elements with data-parallax attribute
+$('[data-parallax]').jarallax({
+  speed: 0.2
+});
+```
+
+```javascript Multiple Selectors
+// Initialize multiple different selectors
+$('.parallax-slow, .parallax-fast').jarallax({
+  speed: 0.5
+});
+```
+</CodeGroup>
+
+## Configuration Options
+
+Pass options as an object to customize the parallax effect:
+
+```javascript
+$('.jarallax').jarallax({
+  // Parallax type: scroll, scale, opacity, scroll-opacity, scale-opacity
+  type: 'scroll',
+  
+  // Parallax speed from -1.0 to 2.0
+  speed: 0.5,
+  
+  // Custom image source
+  imgSrc: 'path/to/image.jpg',
+  
+  // Image element selector
+  imgElement: '.jarallax-img',
+  
+  // Image size (background-size or object-fit values)
+  imgSize: 'cover',
+  
+  // Image position (background-position or object-position values)
+  imgPosition: '50% 50%',
+  
+  // Image repeat
+  imgRepeat: 'no-repeat',
+  
+  // Keep img tag in place
+  keepImg: false,
+  
+  // z-index
+  zIndex: -100,
+  
+  // Disable on mobile devices
+  disableParallax: /iPad|iPhone|iPod|Android/,
+  
+  // Video options
+  videoSrc: null,
+  videoStartTime: 0,
+  videoEndTime: 0,
+  videoLoop: true,
+  videoPlayOnlyVisible: true,
+  videoLazyLoading: true,
+  
+  // Event callbacks
+  onScroll: null,
+  onInit: null,
+  onDestroy: null,
+  onCoverImage: null
+});
+```
+
+## Methods
+
+Call methods on existing Jarallax instances using jQuery:
+
+<Tabs>
+  <Tab title="Destroy">
+    Remove parallax effect and restore original state:
+
+    ```javascript
+    $('.jarallax').jarallax('destroy');
+    ```
+  </Tab>
+
+  <Tab title="isVisible">
+    Check if parallax element is visible in viewport:
+
+    ```javascript
+    const isVisible = $('.jarallax').jarallax('isVisible');
+    console.log(isVisible);
+    ```
+  </Tab>
+
+  <Tab title="onResize">
+    Manually trigger resize calculation:
+
+    ```javascript
+    $('.jarallax').jarallax('onResize');
+    ```
+  </Tab>
+
+  <Tab title="onScroll">
+    Manually trigger scroll calculation:
+
+    ```javascript
+    $('.jarallax').jarallax('onScroll');
+    ```
+  </Tab>
+</Tabs>
+
+## Event Handling
+
+Attach event handlers when initializing or after initialization:
+
+<Steps>
+  <Step title="Initialization Events">
+    Pass event handlers as options:
+
+    ```javascript
+    $('.jarallax').jarallax({
+      speed: 0.5,
+      onInit: function() {
+        console.log('Jarallax initialized on', this);
+      },
+      onDestroy: function() {
+        console.log('Jarallax destroyed on', this);
+      },
+      onCoverImage: function() {
+        console.log('Image covered on', this);
+      }
+    });
+    ```
+  </Step>
+
+  <Step title="Scroll Events">
+    Monitor scroll calculations:
+
+    ```javascript
+    $('.jarallax').jarallax({
+      onScroll: function(calculations) {
+        console.log('Visible percent:', calculations.visiblePercent);
+        console.log('From viewport center:', calculations.fromViewportCenter);
+        
+        // Custom behavior based on scroll position
+        if (calculations.visiblePercent > 0.5) {
+          $(this).addClass('more-visible');
+        } else {
+          $(this).removeClass('more-visible');
+        }
+      }
+    });
+    ```
+  </Step>
+
+  <Step title="Custom Events">
+    Use jQuery's event system for additional functionality:
+
+    ```javascript
+    $('.jarallax')
+      .jarallax({
+        speed: 0.5,
+        onInit: function() {
+          $(this).trigger('jarallax.ready');
+        }
+      })
+      .on('jarallax.ready', function() {
+        console.log('Custom ready event fired');
+      });
+    ```
+  </Step>
+</Steps>
+
+## No Conflict Mode
+
+Prevent namespace collisions when using multiple jQuery plugins:
+
+```javascript
+// Save jarallax to a different namespace
+const jarallaxPlugin = $.fn.jarallax.noConflict();
+
+// Assign to new name
+$.fn.newJarallax = jarallaxPlugin;
+
+// Use with new name
+$('.jarallax').newJarallax({
+  speed: 0.5
+});
+```
+
+<Warning>
+  Call `noConflict()` immediately after loading Jarallax and before any other code that might use `$.fn.jarallax`.
+</Warning>
+
+## Video Backgrounds
+
+Jarallax with jQuery supports YouTube, Vimeo, and self-hosted videos:
+
+<CodeGroup>
+```javascript YouTube
+$('.jarallax').jarallax({
+  speed: 0.2,
+  videoSrc: 'https://www.youtube.com/watch?v=ab0TSkLe-E0',
+  videoLoop: true,
+  videoPlayOnlyVisible: true
+});
+```
+
+```javascript Vimeo
+$('.jarallax').jarallax({
+  speed: 0.2,
+  videoSrc: 'https://vimeo.com/110138539',
+  videoStartTime: 10,
+  videoEndTime: 30
+});
+```
+
+```javascript Self-Hosted
+$('.jarallax').jarallax({
+  speed: 0.2,
+  videoSrc: 'mp4:./video/local-video.mp4,webm:./video/local-video.webm'
+});
+```
+
+```html Data Attributes
+<!-- Use data attributes with automatic initialization -->
+<div class="jarallax" data-jarallax data-video-src="https://youtu.be/mru3Q5m4lkY"></div>
+
+<script>
+  // Jarallax automatically initializes elements with data-jarallax
+</script>
+```
+</CodeGroup>
+
+## Multiple Parallax Instances
+
+Apply different settings to different elements:
+
+```javascript
+// Slow parallax for hero sections
+$('.hero-parallax').jarallax({
+  speed: 0.2,
+  type: 'scroll'
+});
+
+// Fast parallax for decorative elements
+$('.fast-parallax').jarallax({
+  speed: 0.8,
+  type: 'scale'
+});
+
+// Opacity effect for backgrounds
+$('.fade-parallax').jarallax({
+  speed: 0.5,
+  type: 'opacity'
+});
+
+// Combined effects
+$('.fancy-parallax').jarallax({
+  speed: 0.6,
+  type: 'scroll-opacity'
+});
+```
+
+## Chaining Methods
+
+Use jQuery chaining for cleaner code:
+
+```javascript
+$('.jarallax')
+  .jarallax({
+    speed: 0.5,
+    onInit: function() {
+      console.log('Initialized');
+    }
+  })
+  .addClass('parallax-active')
+  .fadeIn(300);
+```
+
+## Dynamic Initialization
+
+Initialize parallax on dynamically added elements:
+
+```javascript
+// Function to initialize new parallax elements
+function initParallax() {
+  $('.jarallax:not(.jarallax-initialized)').jarallax({
+    speed: 0.5
+  });
+}
+
+// Initial initialization
+initParallax();
+
+// Reinitialize after adding new content
+$('#add-section').on('click', function() {
+  const newSection = $('<div class="jarallax"><img class="jarallax-img" src="image.jpg" alt=""></div>');
+  $('body').append(newSection);
+  initParallax();
+});
+```
+
+## Advanced Patterns
+
+<Tabs>
+  <Tab title="Conditional Initialization">
+    Initialize only on desktop devices:
+
+    ```javascript
+    $(document).ready(function() {
+      if ($(window).width() > 768) {
+        $('.jarallax').jarallax({
+          speed: 0.5
+        });
+      }
+    });
+    ```
+  </Tab>
+
+  <Tab title="Responsive Speed">
+    Adjust speed based on viewport size:
+
+    ```javascript
+    function initResponsiveParallax() {
+      const speed = $(window).width() > 768 ? 0.5 : 0.2;
+      
+      $('.jarallax').jarallax('destroy').jarallax({
+        speed: speed
+      });
+    }
+
+    $(window).on('resize', initResponsiveParallax);
+    initResponsiveParallax();
+    ```
+  </Tab>
+
+  <Tab title="Toggle Parallax">
+    Enable/disable parallax dynamically:
+
+    ```javascript
+    let parallaxEnabled = true;
+
+    $('#toggle-parallax').on('click', function() {
+      if (parallaxEnabled) {
+        $('.jarallax').jarallax('destroy');
+        $(this).text('Enable Parallax');
+      } else {
+        $('.jarallax').jarallax({ speed: 0.5 });
+        $(this).text('Disable Parallax');
+      }
+      parallaxEnabled = !parallaxEnabled;
+    });
+    ```
+  </Tab>
+
+  <Tab title="Progress Indicator">
+    Show scroll progress for parallax sections:
+
+    ```javascript
+    $('.jarallax').jarallax({
+      speed: 0.5,
+      onScroll: function(calculations) {
+        const progress = Math.round(calculations.visiblePercent * 100);
+        $(this).find('.progress-bar').css('width', progress + '%');
+      }
+    });
+    ```
+  </Tab>
+</Tabs>
+
+## Working with AJAX
+
+Handle parallax in AJAX-loaded content:
+
+```javascript
+// Load content via AJAX
+$.ajax({
+  url: '/api/get-content',
+  success: function(data) {
+    // Add content to page
+    $('#content-container').html(data);
+    
+    // Initialize parallax on new elements
+    $('#content-container .jarallax').jarallax({
+      speed: 0.5,
+      onInit: function() {
+        console.log('AJAX parallax initialized');
+      }
+    });
+  }
+});
+```
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="jQuery is not defined">
+    Ensure jQuery is loaded before Jarallax:
+
+    ```html
+    <!-- Load jQuery first -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery"></script>
+    
+    <!-- Then load Jarallax -->
+    <script src="https://cdn.jsdelivr.net/npm/jarallax@2/dist/jarallax.min.js"></script>
+    ```
+  </Accordion>
+
+  <Accordion title="Method not working">
+    Check that Jarallax is initialized before calling methods:
+
+    ```javascript
+    // Initialize first
+    $('.jarallax').jarallax({ speed: 0.5 });
+    
+    // Then call methods
+    $('.jarallax').jarallax('onResize');
+    ```
+  </Accordion>
+
+  <Accordion title="Multiple initialization">
+    Prevent double initialization:
+
+    ```javascript
+    // Destroy before reinitializing
+    $('.jarallax').jarallax('destroy').jarallax({
+      speed: 0.5
+    });
+    ```
+  </Accordion>
+</AccordionGroup>
+
+## Best Practices
+
+<Steps>
+  <Step title="Use document.ready">
+    Always initialize Jarallax after DOM is ready:
+
+    ```javascript
+    $(document).ready(function() {
+      $('.jarallax').jarallax({ speed: 0.5 });
+    });
+    ```
+  </Step>
+
+  <Step title="Clean up on destroy">
+    Remove parallax when elements are removed:
+
+    ```javascript
+    // Before removing elements
+    $('.jarallax').jarallax('destroy').remove();
+    ```
+  </Step>
+
+  <Step title="Cache selectors">
+    Store jQuery objects for better performance:
+
+    ```javascript
+    const $parallaxElements = $('.jarallax');
+    $parallaxElements.jarallax({ speed: 0.5 });
+    ```
+  </Step>
+</Steps>
+
+## Migration from Vanilla JS
+
+If you're migrating from vanilla JavaScript:
+
+<CodeGroup>
+```javascript Vanilla JS
+jarallax(document.querySelectorAll('.jarallax'), {
+  speed: 0.5
+});
+
+jarallax(document.querySelectorAll('.jarallax'), 'destroy');
+```
+
+```javascript jQuery Equivalent
+$('.jarallax').jarallax({
+  speed: 0.5
+});
+
+$('.jarallax').jarallax('destroy');
+```
+</CodeGroup>
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Vanilla JavaScript" icon="js" href="/examples/vanilla-javascript">
+    Learn Jarallax without jQuery
+  </Card>
+  <Card title="React & Next.js" icon="react" href="/examples/react-nextjs">
+    Integrate with modern React applications
+  </Card>
+  <Card title="API Reference" icon="code" href="/api/methods">
+    Explore all available methods and options
+  </Card>
+  <Card title="Configuration" icon="sliders" href="/api/options">
+    Advanced configuration options
+  </Card>
+</CardGroup>

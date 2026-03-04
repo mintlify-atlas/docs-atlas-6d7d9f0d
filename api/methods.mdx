@@ -1,0 +1,235 @@
+---
+title: 'Methods'
+description: 'API methods for controlling Jarallax instances'
+---
+
+Jarallax provides several methods to control parallax instances after initialization. Methods can be called on elements that have already been initialized with Jarallax.
+
+## Main Function
+
+### jarallax()
+
+The main function used to initialize Jarallax or call methods on existing instances.
+
+```typescript
+jarallax(
+  elements: Element | Element[] | NodeListOf<Element> | JQuery<Element>,
+  options: JarallaxOptions | string
+): void | boolean
+```
+
+#### Parameters
+
+<ParamField path="elements" type="Element | Element[] | NodeListOf<Element> | JQuery<Element>" required>
+  The DOM element(s) to initialize or call methods on.
+  
+  Can be:
+  - A single DOM element
+  - An array of elements
+  - A NodeList (e.g., from `querySelectorAll`)
+  - A jQuery object (UMD mode only)
+</ParamField>
+
+<ParamField path="options" type="JarallaxOptions | string" required>
+  Either:
+  - A configuration object for initialization (see [Options](/api/options))
+  - A method name string to call on existing instances
+</ParamField>
+
+#### Initialization Example
+
+```javascript
+import { jarallax } from 'jarallax';
+
+// Initialize with options
+jarallax(document.querySelectorAll('.jarallax'), {
+  speed: 0.2,
+  type: 'scroll'
+});
+
+// Initialize a single element
+const element = document.querySelector('.parallax');
+jarallax(element, {
+  speed: 0.5
+});
+```
+
+#### jQuery Usage (UMD mode)
+
+```javascript
+$('.jarallax').jarallax({
+  speed: 0.2
+});
+```
+
+## Instance Methods
+
+Once initialized, you can call methods on Jarallax instances by passing the method name as the second parameter.
+
+### destroy
+
+Destroys the Jarallax instance and restores the element to its original state before initialization.
+
+```typescript
+jarallax(
+  elements: Element | Element[] | NodeListOf<Element> | JQuery<Element>,
+  methodName: 'destroy'
+): void
+```
+
+**What it does:**
+- Removes all Jarallax-created DOM elements (container, parallax image)
+- Restores original element styles from before initialization
+- Removes parallax observers and event listeners
+- Restores the original `<img>` tag to its original position (if applicable)
+- Calls the `onDestroy` callback if provided
+- Deletes the jarallax instance from the element
+
+<CodeGroup>
+```javascript JavaScript
+jarallax(document.querySelectorAll('.jarallax'), 'destroy');
+```
+
+```javascript jQuery
+$('.jarallax').jarallax('destroy');
+```
+</CodeGroup>
+
+### isVisible
+
+Checks if the parallax element is currently visible in the viewport.
+
+```typescript
+jarallax(
+  elements: Element | Element[] | NodeListOf<Element> | JQuery<Element>,
+  methodName: 'isVisible'
+): boolean
+```
+
+**Returns:** `boolean` - `true` if the element is in the viewport, `false` otherwise.
+
+<CodeGroup>
+```javascript JavaScript
+const element = document.querySelector('.jarallax');
+const visible = jarallax(element, 'isVisible');
+
+if (visible) {
+  console.log('Parallax element is visible');
+}
+```
+
+```javascript jQuery
+const visible = $('.jarallax').jarallax('isVisible');
+```
+</CodeGroup>
+
+<Note>
+  This method returns the visibility status based on the first element in the collection.
+</Note>
+
+### onResize
+
+Recalculates and updates the parallax image size and container clipping. This method is automatically called on window resize and load events.
+
+```typescript
+jarallax(
+  elements: Element | Element[] | NodeListOf<Element> | JQuery<Element>,
+  methodName: 'onResize'
+): void
+```
+
+**When to use manually:**
+- After changing element dimensions via JavaScript
+- After showing/hiding the element
+- After layout changes that affect the element's size
+- After modifying CSS that affects dimensions
+
+<CodeGroup>
+```javascript JavaScript
+jarallax(document.querySelectorAll('.jarallax'), 'onResize');
+```
+
+```javascript jQuery
+$('.jarallax').jarallax('onResize');
+```
+</CodeGroup>
+
+### onScroll
+
+Recalculates and updates the parallax image position based on the current scroll position. This method is automatically called on window scroll events.
+
+```typescript
+jarallax(
+  elements: Element | Element[] | NodeListOf<Element> | JQuery<Element>,
+  methodName: 'onScroll'
+): void
+```
+
+**When to use manually:**
+- After programmatic scrolling
+- In custom scroll containers
+- When implementing custom scroll logic
+- To force an immediate position update
+
+<CodeGroup>
+```javascript JavaScript
+jarallax(document.querySelectorAll('.jarallax'), 'onScroll');
+```
+
+```javascript jQuery
+$('.jarallax').jarallax('onScroll');
+```
+</CodeGroup>
+
+## Complete Usage Example
+
+```javascript
+import { jarallax } from 'jarallax';
+
+// Initialize
+const elements = document.querySelectorAll('.jarallax');
+jarallax(elements, {
+  speed: 0.5,
+  type: 'scroll'
+});
+
+// Check visibility
+const isVisible = jarallax(elements[0], 'isVisible');
+console.log('Is visible:', isVisible);
+
+// Manually trigger resize recalculation
+window.addEventListener('custom-resize', () => {
+  jarallax(elements, 'onResize');
+});
+
+// Manually trigger scroll recalculation
+window.addEventListener('custom-scroll', () => {
+  jarallax(elements, 'onScroll');
+});
+
+// Destroy when done
+const destroyButton = document.querySelector('.destroy-btn');
+destroyButton.addEventListener('click', () => {
+  jarallax(elements, 'destroy');
+});
+```
+
+## Method Chaining
+
+<Note>
+  Most methods return `void`, so method chaining is not supported. The exception is `isVisible`, which returns a boolean value.
+</Note>
+
+## jQuery No-Conflict Mode
+
+If you're using jQuery and need to avoid namespace collisions:
+
+```javascript
+const jarallaxPlugin = $.fn.jarallax.noConflict();
+$.fn.newJarallax = jarallaxPlugin;
+
+// Now use the new name
+$('.jarallax').newJarallax({
+  speed: 0.5
+});
+```

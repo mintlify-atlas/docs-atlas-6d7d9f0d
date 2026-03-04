@@ -1,80 +1,535 @@
 ---
-title: "Quickstart"
-description: "Start building awesome documentation in minutes"
+title: Quick Start
+description: Create your first parallax scrolling effect in minutes with this step-by-step guide
 ---
 
-## Get started in three steps
+# Quick Start Guide
 
-Get your documentation site running locally and make your first customization.
+This guide will walk you through creating your first parallax effect with Jarallax. You'll go from zero to a working parallax scrolling background in just a few steps.
 
-### Step 1: Set up your local environment
+## Basic Parallax Image
 
-<AccordionGroup>
-  <Accordion icon="copy" title="Clone your docs locally">
-    During the onboarding process, you created a GitHub repository with your docs content if you didn't already have one. You can find a link to this repository in your [dashboard](https://dashboard.mintlify.com).
+The simplest way to use Jarallax is with a background image and the `<img>` tag.
+
+<Steps>
+  <Step title="Add the HTML structure">
+    Create a container element with the `jarallax` class and an `<img>` element with the `jarallax-img` class:
+
+    ```html
+    <div class="jarallax" style="height: 500px;">
+      <img class="jarallax-img" src="path/to/image.jpg" alt="Background" />
+      <div style="position: relative; z-index: 1;">
+        <h1>Your Content Here</h1>
+        <p>This content appears above the parallax background.</p>
+      </div>
+    </div>
+    ```
+
+    <Note>
+      Add a minimum height to your parallax container so it has dimensions to work with.
+    </Note>
+  </Step>
+
+  <Step title="Initialize Jarallax">
+    Call the `jarallax` function on your elements:
+
+    ```javascript
+    import { jarallax } from 'jarallax';
+    import 'jarallax/dist/jarallax.min.css';
+
+    jarallax(document.querySelectorAll('.jarallax'));
+    ```
+
+    Or with custom options:
+
+    ```javascript
+    jarallax(document.querySelectorAll('.jarallax'), {
+      speed: 0.2, // Parallax speed (0.0 to 2.0)
+    });
+    ```
+  </Step>
+
+  <Step title="See it in action">
+    Scroll the page and watch your background move at a different speed than your content!
+  </Step>
+</Steps>
+
+## Alternative: CSS Background Image
+
+You can also use CSS background images instead of `<img>` tags:
+
+```html
+<div 
+  class="jarallax" 
+  style="background-image: url('path/to/image.jpg'); height: 500px;"
+>
+  <div style="position: relative; z-index: 1;">
+    <h1>Your Content Here</h1>
+  </div>
+</div>
+```
+
+```javascript
+jarallax(document.querySelectorAll('.jarallax'));
+```
+
+## Data Attribute Initialization
+
+When using UMD mode, Jarallax can automatically initialize elements with the `data-jarallax` attribute:
+
+```html
+<!-- Automatic initialization (UMD only) -->
+<div 
+  data-jarallax 
+  data-speed="0.2" 
+  class="jarallax"
+  style="height: 500px;"
+>
+  <img class="jarallax-img" src="path/to/image.jpg" alt="" />
+</div>
+```
+
+<Info>
+  With data attributes, you can configure all options directly in HTML. For example: `data-speed="0.5"`, `data-type="scale"`, `data-img-position="0% 50%"`.
+</Info>
+
+## Complete Working Example
+
+Here's a full HTML page with a working parallax effect:
+
+<CodeGroup>
+```html ESM (Modern)
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Jarallax Example</title>
     
-    To clone the repository locally so that you can make and preview changes to your docs, follow the [Cloning a repository](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) guide in the GitHub docs.
-  </Accordion>
-  <Accordion icon="rectangle-terminal" title="Start the preview server">
-    1. Install the Mintlify CLI: `npm i -g mint`
-    2. Navigate to your docs directory and run: `mint dev`
-    3. Open `http://localhost:3000` to see your docs live!
+    <!-- Jarallax CSS -->
+    <link 
+      href="https://cdn.jsdelivr.net/npm/jarallax@2/dist/jarallax.min.css" 
+      rel="stylesheet" 
+    />
     
-    <Tip>Your preview updates automatically as you edit files.</Tip>
-  </Accordion>
-</AccordionGroup>
+    <style>
+      body {
+        margin: 0;
+        font-family: system-ui, sans-serif;
+      }
+      
+      .jarallax {
+        position: relative;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      
+      .content {
+        position: relative;
+        z-index: 1;
+        text-align: center;
+        color: white;
+        padding: 2rem;
+        background: rgba(0, 0, 0, 0.3);
+        border-radius: 8px;
+      }
+      
+      .section {
+        padding: 4rem 2rem;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="section">
+      <h1>Scroll Down</h1>
+      <p>Watch the parallax effect in action</p>
+    </div>
 
-### Step 2: Deploy your changes
+    <div class="jarallax">
+      <img 
+        class="jarallax-img" 
+        src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4" 
+        alt="Mountain landscape" 
+      />
+      <div class="content">
+        <h2>Parallax Scrolling</h2>
+        <p>Background moves at a different speed</p>
+      </div>
+    </div>
 
-<AccordionGroup>
-  <Accordion icon="github" title="Install our GitHub app">
-    Install the Mintlify GitHub app from your [dashboard](https://dashboard.mintlify.com/settings/organization/github-app).
+    <div class="section">
+      <h2>Keep Scrolling</h2>
+      <p>Notice how the background moved slower than the page</p>
+    </div>
+
+    <script type="module">
+      import { jarallax } from "https://cdn.jsdelivr.net/npm/jarallax@2/+esm";
+      
+      jarallax(document.querySelectorAll(".jarallax"), {
+        speed: 0.2,
+      });
+    </script>
+  </body>
+</html>
+```
+
+```html UMD (Traditional)
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Jarallax Example</title>
     
-    Our GitHub app automatically deploys your changes to your docs site, so you don't need to manage deployments yourself.
+    <!-- Jarallax CSS -->
+    <link 
+      href="https://cdn.jsdelivr.net/npm/jarallax@2/dist/jarallax.min.css" 
+      rel="stylesheet" 
+    />
+    
+    <style>
+      body {
+        margin: 0;
+        font-family: system-ui, sans-serif;
+      }
+      
+      .jarallax {
+        position: relative;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      
+      .content {
+        position: relative;
+        z-index: 1;
+        text-align: center;
+        color: white;
+        padding: 2rem;
+        background: rgba(0, 0, 0, 0.3);
+        border-radius: 8px;
+      }
+      
+      .section {
+        padding: 4rem 2rem;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="section">
+      <h1>Scroll Down</h1>
+      <p>Watch the parallax effect in action</p>
+    </div>
+
+    <div class="jarallax">
+      <img 
+        class="jarallax-img" 
+        src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4" 
+        alt="Mountain landscape" 
+      />
+      <div class="content">
+        <h2>Parallax Scrolling</h2>
+        <p>Background moves at a different speed</p>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Keep Scrolling</h2>
+      <p>Notice how the background moved slower than the page</p>
+    </div>
+
+    <!-- Jarallax JS -->
+    <script src="https://cdn.jsdelivr.net/npm/jarallax@2/dist/jarallax.min.js"></script>
+    
+    <script>
+      jarallax(document.querySelectorAll(".jarallax"), {
+        speed: 0.2,
+      });
+    </script>
+  </body>
+</html>
+```
+</CodeGroup>
+
+## Video Background Example
+
+Add a YouTube or Vimeo video as a parallax background:
+
+<Steps>
+  <Step title="Load the video extension">
+    ```javascript
+    import { jarallax, jarallaxVideo } from 'jarallax';
+    import 'jarallax/dist/jarallax.min.css';
+
+    // Initialize video extension
+    jarallaxVideo();
+    ```
+  </Step>
+
+  <Step title="Add HTML with video URL">
+    ```html
+    <div class="jarallax" style="height: 600px;">
+      <div style="position: relative; z-index: 1;">
+        <h1>Video Background</h1>
+      </div>
+    </div>
+    ```
+  </Step>
+
+  <Step title="Initialize with videoSrc option">
+    <Tabs>
+      <Tab title="JavaScript">
+        ```javascript
+        jarallax(document.querySelectorAll('.jarallax'), {
+          speed: 0.2,
+          videoSrc: 'https://www.youtube.com/watch?v=ab0TSkLe-E0',
+        });
+        ```
+      </Tab>
+      
+      <Tab title="Data Attribute">
+        ```html
+        <div 
+          class="jarallax" 
+          data-jarallax 
+          data-video-src="https://www.youtube.com/watch?v=ab0TSkLe-E0"
+          style="height: 600px;"
+        >
+          <h1>Video Background</h1>
+        </div>
+        ```
+      </Tab>
+    </Tabs>
+  </Step>
+</Steps>
+
+### Supported Video Formats
+
+<CodeGroup>
+```javascript YouTube
+jarallax(document.querySelectorAll('.jarallax'), {
+  videoSrc: 'https://www.youtube.com/watch?v=ab0TSkLe-E0',
+});
+```
+
+```javascript Vimeo
+jarallax(document.querySelectorAll('.jarallax'), {
+  videoSrc: 'https://vimeo.com/110138539',
+});
+```
+
+```javascript Self-Hosted
+jarallax(document.querySelectorAll('.jarallax'), {
+  videoSrc: 'mp4:./video/local-video.mp4,webm:./video/local-video.webm',
+});
+```
+</CodeGroup>
+
+<Warning>
+  For self-hosted videos, provide at least one format (mp4, webm, or ogv). Multiple formats ensure better browser compatibility.
+</Warning>
+
+## Customizing Speed
+
+The `speed` option controls how fast the background moves relative to scrolling:
+
+```javascript
+// Slower than scrolling (subtle effect)
+jarallax(element, { speed: 0.2 });
+
+// Default speed
+jarallax(element, { speed: 0.5 });
+
+// Faster than scrolling
+jarallax(element, { speed: 1.5 });
+
+// No parallax (moves with page)
+jarallax(element, { speed: 1 });
+
+// Reverse direction
+jarallax(element, { speed: -0.5 });
+```
+
+<Info>
+  Speed values range from **-1.0** to **2.0**:
+  - `< 0`: Background moves in reverse
+  - `0.0 - 0.9`: Background moves slower (parallax effect)
+  - `1.0`: No parallax (fixed background)
+  - `> 1.0`: Background moves faster
+</Info>
+
+## Different Effect Types
+
+Jarallax supports multiple effect types:
+
+<CodeGroup>
+```javascript Scroll (Default)
+jarallax(element, {
+  type: 'scroll', // Background moves at different speed
+  speed: 0.5,
+});
+```
+
+```javascript Scale
+jarallax(element, {
+  type: 'scale', // Background zooms in/out
+  speed: 0.3,
+});
+```
+
+```javascript Opacity
+jarallax(element, {
+  type: 'opacity', // Fades in/out
+  speed: 0.5,
+});
+```
+
+```javascript Combined Effects
+jarallax(element, {
+  type: 'scroll-opacity', // Scroll + fade
+  speed: 0.5,
+});
+
+jarallax(element, {
+  type: 'scale-opacity', // Scale + fade
+  speed: 0.5,
+});
+```
+</CodeGroup>
+
+## Using with Picture Element
+
+For responsive images with different sources:
+
+```html
+<div class="jarallax" style="height: 500px;">
+  <picture class="jarallax-img">
+    <source 
+      media="(min-width: 1024px)" 
+      srcset="desktop-image.jpg" 
+    />
+    <source 
+      media="(min-width: 768px)" 
+      srcset="tablet-image.jpg" 
+    />
+    <img src="mobile-image.jpg" alt="Responsive background" />
+  </picture>
+  <div style="position: relative; z-index: 1;">
+    <h1>Responsive Parallax</h1>
+  </div>
+</div>
+```
+
+## Disable on Mobile
+
+Optionally disable parallax on mobile devices for better performance:
+
+```javascript
+jarallax(document.querySelectorAll('.jarallax'), {
+  speed: 0.2,
+  disableParallax: /iPad|iPhone|iPod|Android/,
+});
+```
+
+Or use a function:
+
+```javascript
+jarallax(document.querySelectorAll('.jarallax'), {
+  speed: 0.2,
+  disableParallax: function() {
+    return window.innerWidth < 768;
+  },
+});
+```
+
+## Common Patterns
+
+### Hero Section
+
+```html
+<div class="jarallax hero" style="height: 100vh;">
+  <img class="jarallax-img" src="hero-bg.jpg" alt="" />
+  <div class="hero-content">
+    <h1>Welcome</h1>
+    <p>Amazing parallax scrolling</p>
+    <button>Get Started</button>
+  </div>
+</div>
+
+<style>
+  .hero-content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+  }
+</style>
+```
+
+### Multiple Sections
+
+```javascript
+// Initialize all parallax sections at once
+jarallax(document.querySelectorAll('.jarallax'), {
+  speed: 0.2,
+});
+
+// Or configure each individually
+jarallax(document.querySelector('.hero'), { speed: 0.2 });
+jarallax(document.querySelector('.about'), { speed: 0.5, type: 'scale' });
+jarallax(document.querySelector('.contact'), { speed: -0.2 });
+```
+
+## Troubleshooting
+
+<Accordion title="Parallax not working">
+  - Ensure the container has a defined height
+  - Check that CSS file is loaded
+  - Verify `jarallax` function is called after DOM is ready
+  - Check browser console for errors
 </Accordion>
-<Accordion icon="palette" title="Update your site name and colors">
-    For a first change, let's update the name and colors of your docs site.
 
-    1. Open `docs.json` in your editor.
-    2. Change the `"name"` field to your project name.
-    3. Update the `"colors"` to match your brand.
-    4. Save and see your changes instantly at `http://localhost:3000`.
-
-    <Tip>Try changing the primary color to see an immediate difference!</Tip>
-  </Accordion>
-</AccordionGroup>
-
-### Step 3: Go live
-
-<Accordion icon="rocket" title="Publish your docs">
-  1. Commit and push your changes.
-  2. Your docs will update and be live in moments!
+<Accordion title="Image not showing">
+  - Verify image path is correct
+  - Check that image has loaded (Network tab)
+  - Ensure CSS is properly loaded
+  - Try using `imgSrc` option directly: `jarallax(element, { imgSrc: 'path/to/image.jpg' })`
 </Accordion>
 
-## Next steps
+<Accordion title="Performance issues on mobile">
+  - Use the `disableParallax` option to disable on mobile
+  - Reduce image file sizes
+  - Consider using `disableVideo` for video backgrounds on mobile
+</Accordion>
 
-Now that you have your docs running, explore these key features:
+## Next Steps
+
+Now that you have a working parallax effect, explore more advanced features:
 
 <CardGroup cols={2}>
-
-<Card title="Write Content" icon="pen-to-square" href="/essentials/markdown">
-  Learn MDX syntax and start writing your documentation.
-</Card>
-
-<Card title="Customize style" icon="palette" href="/essentials/settings">
-  Make your docs match your brand perfectly.
-</Card>
-
-<Card title="Add code examples" icon="square-code" href="/essentials/code">
-  Include syntax-highlighted code blocks.
-</Card>
-
-<Card title="API documentation" icon="code" href="/api-reference/introduction">
-  Auto-generate API docs from OpenAPI specs.
-</Card>
-
+  <Card title="Configuration Options" icon="sliders" href="/api/options">
+    Learn about all available options and callbacks
+  </Card>
+  
+  <Card title="API Reference" icon="code" href="/api/methods">
+    Explore methods and programmatic control
+  </Card>
+  
+  <Card title="Video Backgrounds" icon="video" href="/guides/video-backgrounds">
+    Deep dive into video parallax features
+  </Card>
+  
+  <Card title="Examples" icon="sparkles" href="/examples/vanilla-javascript">
+    Browse more example implementations
+  </Card>
 </CardGroup>
-
-<Note>
-  **Need help?** See our [full documentation](https://mintlify.com/docs) or join our [community](https://mintlify.com/community).
-</Note>

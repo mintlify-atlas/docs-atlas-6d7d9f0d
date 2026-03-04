@@ -1,0 +1,461 @@
+---
+title: Video Backgrounds
+description: Add parallax effects to YouTube, Vimeo, and self-hosted video backgrounds
+---
+
+Jarallax supports video backgrounds with parallax effects through the video extension. This guide covers how to implement video parallax with different video sources.
+
+## Installation
+
+The video extension requires both the core Jarallax library and the video extension:
+
+<CodeGroup>
+```bash npm
+npm install jarallax
+```
+
+```bash yarn
+yarn add jarallax
+```
+
+```bash pnpm
+pnpm add jarallax
+```
+</CodeGroup>
+
+## Setup
+
+Import and initialize the video extension before using video parallax:
+
+<Tabs>
+  <Tab title="ES Modules">
+    ```javascript
+    import { jarallax, jarallaxVideo } from 'jarallax';
+    import 'jarallax/dist/jarallax.min.css';
+
+    // Initialize video extension
+    jarallaxVideo();
+
+    // Now use Jarallax with video
+    jarallax(document.querySelectorAll('.jarallax'), {
+      speed: 0.2,
+      videoSrc: 'https://www.youtube.com/watch?v=ab0TSkLe-E0'
+    });
+    ```
+  </Tab>
+
+  <Tab title="UMD (Browser)">
+    ```html
+    <!-- Jarallax CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/jarallax@2/dist/jarallax.min.css" rel="stylesheet">
+
+    <!-- Jarallax JS -->
+    <script src="https://cdn.jsdelivr.net/npm/jarallax@2/dist/jarallax.min.js"></script>
+    
+    <!-- Jarallax Video Extension -->
+    <script src="https://cdn.jsdelivr.net/npm/jarallax@2/dist/jarallax-video.min.js"></script>
+    
+    <script>
+      jarallax(document.querySelectorAll('.jarallax'), {
+        speed: 0.2,
+        videoSrc: 'https://www.youtube.com/watch?v=ab0TSkLe-E0'
+      });
+    </script>
+    ```
+  </Tab>
+</Tabs>
+
+<Info>The video extension uses the [video-worker](https://github.com/nk-o/video-worker) library internally to handle YouTube, Vimeo, and self-hosted videos.</Info>
+
+## YouTube Videos
+
+YouTube videos are the most common video source for parallax backgrounds.
+
+<Steps>
+  <Step title="Create HTML Structure">
+    ```html
+    <div class="jarallax">
+      Your content here...
+    </div>
+    ```
+  </Step>
+
+  <Step title="Initialize with videoSrc">
+    <Tabs>
+      <Tab title="JavaScript">
+        ```javascript
+        jarallax(document.querySelectorAll('.jarallax'), {
+          speed: 0.2,
+          videoSrc: 'https://www.youtube.com/watch?v=ab0TSkLe-E0'
+        });
+        ```
+      </Tab>
+
+      <Tab title="Data Attribute">
+        ```html
+        <div class="jarallax" 
+             data-jarallax 
+             data-video-src="https://www.youtube.com/watch?v=ab0TSkLe-E0">
+          Your content here...
+        </div>
+        ```
+      </Tab>
+    </Tabs>
+  </Step>
+</Steps>
+
+<Tip>YouTube short URLs also work: `https://youtu.be/ab0TSkLe-E0`</Tip>
+
+## Vimeo Videos
+
+Vimeo videos work the same way as YouTube:
+
+<Tabs>
+  <Tab title="JavaScript">
+    ```javascript
+    jarallax(document.querySelectorAll('.jarallax'), {
+      speed: 0.2,
+      videoSrc: 'https://vimeo.com/110138539'
+    });
+    ```
+  </Tab>
+
+  <Tab title="Data Attribute">
+    ```html
+    <div class="jarallax" 
+         data-jarallax 
+         data-video-src="https://vimeo.com/110138539">
+      Your content here...
+    </div>
+    ```
+  </Tab>
+</Tabs>
+
+## Self-Hosted Videos
+
+For self-hosted videos, specify video formats prefixed with the format type:
+
+<Tabs>
+  <Tab title="JavaScript">
+    ```javascript
+    jarallax(document.querySelectorAll('.jarallax'), {
+      speed: 0.2,
+      videoSrc: 'mp4:./video/local-video.mp4,webm:./video/local-video.webm'
+    });
+    ```
+  </Tab>
+
+  <Tab title="Data Attribute">
+    ```html
+    <div class="jarallax" 
+         data-jarallax 
+         data-video-src="mp4:./video/local-video.mp4,webm:./video/local-video.webm">
+      Your content here...
+    </div>
+    ```
+  </Tab>
+</Tabs>
+
+<Note>You only need one video format, not all three. Providing multiple formats ensures maximum browser compatibility. Common formats: `mp4`, `webm`, `ogv`</Note>
+
+### Single Format Example
+
+```javascript
+jarallax(document.querySelectorAll('.jarallax'), {
+  videoSrc: 'mp4:./video/local-video.mp4'
+});
+```
+
+## Video Configuration Options
+
+<Accordion title="videoStartTime">
+  Start the video at a specific time in seconds.
+
+  ```javascript
+  jarallax(document.querySelectorAll('.jarallax'), {
+    videoSrc: 'https://www.youtube.com/watch?v=ab0TSkLe-E0',
+    videoStartTime: 10 // Start at 10 seconds
+  });
+  ```
+
+  **Default:** `0`
+</Accordion>
+
+<Accordion title="videoEndTime">
+  End the video at a specific time in seconds.
+
+  ```javascript
+  jarallax(document.querySelectorAll('.jarallax'), {
+    videoSrc: 'https://www.youtube.com/watch?v=ab0TSkLe-E0',
+    videoStartTime: 10,
+    videoEndTime: 60 // End at 60 seconds
+  });
+  ```
+
+  **Default:** `0` (plays until the end)
+</Accordion>
+
+<Accordion title="videoLoop">
+  Loop the video infinitely.
+
+  ```javascript
+  jarallax(document.querySelectorAll('.jarallax'), {
+    videoSrc: 'https://www.youtube.com/watch?v=ab0TSkLe-E0',
+    videoLoop: true // Default
+  });
+  ```
+
+  **Default:** `true`
+</Accordion>
+
+<Accordion title="videoVolume">
+  Set video volume from 0 to 100.
+
+  ```javascript
+  jarallax(document.querySelectorAll('.jarallax'), {
+    videoSrc: 'https://www.youtube.com/watch?v=ab0TSkLe-E0',
+    videoVolume: 50 // 50% volume
+  });
+  ```
+
+  **Default:** `0` (muted)
+
+  <Warning>Many browsers block autoplaying videos with sound. Keep videos muted for best compatibility.</Warning>
+</Accordion>
+
+<Accordion title="videoPlayOnlyVisible">
+  Play video only when it's visible in the viewport.
+
+  ```javascript
+  jarallax(document.querySelectorAll('.jarallax'), {
+    videoSrc: 'https://www.youtube.com/watch?v=ab0TSkLe-E0',
+    videoPlayOnlyVisible: true // Default
+  });
+  ```
+
+  **Default:** `true`
+
+  <Tip>This option improves performance by pausing videos that are not visible.</Tip>
+</Accordion>
+
+<Accordion title="videoLazyLoading">
+  Load video only when it becomes visible in the viewport.
+
+  ```javascript
+  jarallax(document.querySelectorAll('.jarallax'), {
+    videoSrc: 'https://www.youtube.com/watch?v=ab0TSkLe-E0',
+    videoLazyLoading: true // Default
+  });
+  ```
+
+  **Default:** `true`
+
+  <Tip>Lazy loading significantly improves initial page load performance when you have multiple video backgrounds.</Tip>
+</Accordion>
+
+<Accordion title="videoClass">
+  CSS class added to the video element.
+
+  ```javascript
+  jarallax(document.querySelectorAll('.jarallax'), {
+    videoSrc: 'https://www.youtube.com/watch?v=ab0TSkLe-E0',
+    videoClass: 'jarallax-video' // Default
+  });
+  ```
+
+  **Default:** `'jarallax-video'`
+
+  The video type is automatically appended: `jarallax-video-youtube`, `jarallax-video-vimeo`, or `jarallax-video-local`
+</Accordion>
+
+## Disable Videos on Mobile
+
+You can disable video loading on mobile devices to improve performance:
+
+```javascript
+jarallax(document.querySelectorAll('.jarallax'), {
+  videoSrc: 'https://www.youtube.com/watch?v=ab0TSkLe-E0',
+  disableVideo: /iPad|iPhone|iPod|Android/
+});
+```
+
+Or using a function:
+
+```javascript
+jarallax(document.querySelectorAll('.jarallax'), {
+  videoSrc: 'https://www.youtube.com/watch?v=ab0TSkLe-E0',
+  disableVideo: function() {
+    return /iPad|iPhone|iPod|Android/.test(navigator.userAgent);
+  }
+});
+```
+
+<Info>When `disableVideo` is active, Jarallax will display a fallback image instead (either from `imgSrc` option or the video thumbnail).</Info>
+
+## Adding Fallback Images
+
+Provide a fallback image for when the video is loading or disabled:
+
+<Tabs>
+  <Tab title="With jarallax-img">
+    ```html
+    <div class="jarallax" data-video-src="https://www.youtube.com/watch?v=ab0TSkLe-E0">
+      <img class="jarallax-img" src="fallback-image.jpg" alt="">
+      Your content here...
+    </div>
+    ```
+  </Tab>
+
+  <Tab title="With imgSrc option">
+    ```javascript
+    jarallax(document.querySelectorAll('.jarallax'), {
+      videoSrc: 'https://www.youtube.com/watch?v=ab0TSkLe-E0',
+      imgSrc: 'fallback-image.jpg'
+    });
+    ```
+  </Tab>
+</Tabs>
+
+<Tip>For self-hosted videos, the fallback image is automatically set as the video poster attribute.</Tip>
+
+## Video Events
+
+The video extension provides additional events for video lifecycle management:
+
+<Accordion title="onVideoInsert">
+  Called when the video element is inserted into the DOM.
+
+  ```javascript
+  jarallax(document.querySelectorAll('.jarallax'), {
+    videoSrc: 'https://www.youtube.com/watch?v=ab0TSkLe-E0',
+    onVideoInsert: function() {
+      console.log('Video element inserted');
+      console.log('Video element:', this.$video);
+    }
+  });
+  ```
+
+  Access the video element via `this.$video`
+</Accordion>
+
+<Accordion title="onVideoWorkerInit">
+  Called when the VideoWorker instance is initialized.
+
+  ```javascript
+  jarallax(document.querySelectorAll('.jarallax'), {
+    videoSrc: 'https://www.youtube.com/watch?v=ab0TSkLe-E0',
+    onVideoWorkerInit: function(videoWorker) {
+      console.log('VideoWorker initialized:', videoWorker);
+      
+      // Access VideoWorker methods
+      videoWorker.on('ready', function() {
+        console.log('Video is ready');
+      });
+    }
+  });
+  ```
+
+  The VideoWorker instance is passed as a parameter.
+</Accordion>
+
+## Complete Video Example
+
+Here's a complete example with YouTube video:
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Video Parallax Example</title>
+    
+    <!-- Jarallax CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/jarallax@2/dist/jarallax.min.css" rel="stylesheet">
+    
+    <style>
+      .jarallax {
+        position: relative;
+        min-height: 600px;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      
+      .content {
+        position: relative;
+        z-index: 1;
+        text-align: center;
+        background: rgba(0,0,0,0.5);
+        padding: 2rem;
+        border-radius: 8px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="jarallax" data-video-src="https://www.youtube.com/watch?v=mru3Q5m4lkY">
+      <img class="jarallax-img" src="fallback.jpg" alt="">
+      <div class="content">
+        <h1>Video Parallax</h1>
+        <p>Smooth parallax scrolling with video background</p>
+      </div>
+    </div>
+
+    <!-- Jarallax JS -->
+    <script src="https://cdn.jsdelivr.net/npm/jarallax@2/dist/jarallax.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jarallax@2/dist/jarallax-video.min.js"></script>
+    
+    <script>
+      jarallax(document.querySelectorAll('.jarallax'), {
+        speed: 0.2,
+        videoLoop: true,
+        videoPlayOnlyVisible: true
+      });
+    </script>
+  </body>
+</html>
+```
+
+## Advanced: Multiple Videos
+
+You can have multiple video backgrounds on the same page:
+
+```html
+<!-- YouTube Video -->
+<div class="jarallax" data-video-src="https://www.youtube.com/watch?v=ab0TSkLe-E0">
+  <h2>YouTube Video</h2>
+</div>
+
+<!-- Vimeo Video -->
+<div class="jarallax" data-video-src="https://vimeo.com/110138539">
+  <h2>Vimeo Video</h2>
+</div>
+
+<!-- Self-Hosted Video -->
+<div class="jarallax" data-video-src="mp4:./video/local.mp4">
+  <h2>Local Video</h2>
+</div>
+
+<script>
+  jarallax(document.querySelectorAll('.jarallax'), {
+    speed: 0.2,
+    videoLazyLoading: true,
+    videoPlayOnlyVisible: true
+  });
+</script>
+```
+
+<Tip>With `videoLazyLoading` and `videoPlayOnlyVisible` enabled, only visible videos will load and play, optimizing performance.</Tip>
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Advanced Options" icon="sliders" href="/guides/advanced-options">
+    Explore different parallax types and performance optimization
+  </Card>
+  
+  <Card title="Events & Methods" icon="code" href="/guides/events-and-methods">
+    Learn about the API for controlling parallax instances
+  </Card>
+</CardGroup>
